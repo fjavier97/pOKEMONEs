@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="componente" type="componente"/>
+
+  <xs:element name="desktopXmlConfig" type="desktopXmlConfig"/>
+
+  <xs:complexType name="componente">
+    <xs:sequence>
+      <xs:element name="menu_path" type="xs:string" default="/" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="class_template" type="xs:string" use="required"/>
+    <xs:attribute name="nombre" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="desktopXmlConfig">
+    <xs:sequence>
+      <xs:element name="componentes" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element ref="componente" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+
