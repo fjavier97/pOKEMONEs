@@ -1,0 +1,26 @@
+.tree-cell .button {
+	-fx-background-color:transparent;
+	-fx-border-width:2;
+	-fx-border-color:transparent; 
+	-fx-text-fill: white; 
+	-fx-insets:0;
+}
+
+.tree-cell .button:hover {
+
+	-fx-border-color:white; 
+
+}
+
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: darkblue;
+   -fx-border-color: darkblue;
+   -fx-pref-width:5;
+   -fx-padding:0;
+}
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: darkblue;
+   -fx-border-color: darkblue;
+   -fx-pref-height:5;
+   -fx-padding:0;
+}

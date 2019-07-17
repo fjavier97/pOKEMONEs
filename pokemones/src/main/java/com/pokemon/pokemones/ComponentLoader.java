@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
@@ -70,10 +72,14 @@ public class ComponentLoader {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource(fx_prefix+"Core"+fx_suffix));
 			loader.setControllerFactory(ctx::getBean);
-			stage.setScene(new Scene(loader.load()));
+			Parent node = (Parent)loader.load();
+			System.out.println(fx_css_prefix+"ListManager"+fx_css_suffix);
+			node.getStylesheets().add(getClass().getResource(fx_css_prefix+"Core"+fx_css_suffix).toString());
+			stage.setScene(new Scene(node));
 			stage.show();
 			return true;
 		}catch (Exception e) {
+			e.printStackTrace();
 			logger.error("error cargando componente principal");
 			return false;
 		}

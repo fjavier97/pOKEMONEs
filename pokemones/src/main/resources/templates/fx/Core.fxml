@@ -10,15 +10,27 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Label?>
 
-<BorderPane 
-	fx:controller="com.pokemon.pokemones.controller.CoreController" 
-	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
+
+<BorderPane fx:controller="com.pokemon.pokemones.controller.CoreController"
+			xmlns="https://javafx.com/javafx/8"	xmlns:fx="https://javafx.com/fxml">
 	<top>
-		<ToolBar fx:id="menus"/>
+		<Label text="aqui titulo"/>
 	</top>
 	<center>
-		<StackPane fx:id="content"/>
+		<SplitPane fx:id="splitpane">
+			
+			<VBox fx:id="navigation_menu" prefWidth="500">
+				<TreeView fx:id="tree" />
+			</VBox>
+			<StackPane fx:id="content" />
+		</SplitPane>
 	</center>
+	<bottom>
+		<Label text="aqui footer"/>
+	</bottom>
 </BorderPane>
 
