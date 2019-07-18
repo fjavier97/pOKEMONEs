@@ -1,6 +1,7 @@
-package com.pokemon.pokemones;
+package customfx.scene.control;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
@@ -9,15 +10,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
-public class MenuTreeCell<E> extends TreeCell<E>{
+public class ActionTreeCell<E> extends TreeCell<E>{
 	
 	private double arrow_size;
 		
-	public MenuTreeCell(){
+	public ActionTreeCell(){
 		this(7);
 	}
 	
-	public MenuTreeCell(final double arrow_size){
+	public ActionTreeCell(final double arrow_size){
 		super();
 		this.arrow_size=arrow_size;
 		if(getPrefHeight()<=0) {
@@ -47,7 +48,18 @@ public class MenuTreeCell<E> extends TreeCell<E>{
         	
         	if(getTreeItem() instanceof ActionTreeItem) {        		
 				btn = new Button(item.toString());
-				((Button)btn).setOnAction(((ActionTreeItem<E>)getTreeItem()).getHandler());			
+				EventHandler<ActionEvent> handler = ((ActionTreeItem<E>)getTreeItem()).getHandler();
+				/* si no tiene manejador */
+				if(handler==null) {
+					if(!getTreeItem().isLeaf()) {
+						/* si es un nodo que no es final, por defecto cambiara entre expandido y oculto */
+						handler = e->getTreeItem().setExpanded(!getTreeItem().isExpanded());
+					}else {
+						/* si es un nodo final, por defecto no hara nada */
+						handler = e->{};
+					}
+				}
+				((Button)btn).setOnAction(handler);			
         	}else {        		
 				btn = new Label(item.toString());				
         	}

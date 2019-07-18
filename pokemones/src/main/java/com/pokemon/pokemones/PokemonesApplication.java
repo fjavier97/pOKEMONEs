@@ -1,19 +1,11 @@
 package com.pokemon.pokemones;
 
-import java.net.URL;
-
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import recursos.config.Componente;
 
 @SpringBootApplication
 public class PokemonesApplication extends Application{
@@ -37,7 +29,7 @@ public class PokemonesApplication extends Application{
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		context.publishEvent(new LoadEvent(primaryStage));
+		context.publishEvent(new StartEvent(primaryStage));
 		
 	}
 
