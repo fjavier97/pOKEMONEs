@@ -2,6 +2,8 @@ package com.pokemon.pokemones;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 
 @Component
@@ -43,12 +47,12 @@ public class ComponentLoader {
 	}
 	
 
-	public BorderPane load(final String name) throws ComponentLoadException, IOException{
-		
+	public Componente load(final String name) throws ComponentLoadException, IOException{
 		final String fulltemplatepath = fx_prefix+name+fx_suffix;
-		final String csspath = fx_css_prefix+name+fx_css_suffix;			
+		final String csspath = fx_css_prefix+name+fx_css_suffix;	
+		final Componente res = new Componente();
 		
-		final FXMLLoader loader = new FXMLLoader();
+		FXMLLoader loader = new FXMLLoader();
 		
 		/* configuro la vista */
 		final URL templateurl = getClass().getResource(fulltemplatepath);
@@ -72,11 +76,26 @@ public class ComponentLoader {
 				component.getStylesheets().add(csspath);
 			}
 			/* TODO aqui podemos poner alguna forma de pasarle parametros al controlador */
-			return component;
+			res.setContent(component);
+			System.out.println(component);
 		}catch (Exception e) {
 			throw e;
 		}		
 		
+		try {
+			loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource(fx_prefix+"menus/"+name+fx_suffix));
+			loader.setControllerFactory(ctx::getBean);
+			LinkedList<Button> m = loader.load();
+			res.setMenus(m);
+			System.out.println(m.toString());
+		}catch (Exception e) {
+			System.out.println(fx_prefix+"menus/"+name+fx_suffix);
+			e.printStackTrace();
+		}
+		
+		
+		return res;
 	}
 	
 	

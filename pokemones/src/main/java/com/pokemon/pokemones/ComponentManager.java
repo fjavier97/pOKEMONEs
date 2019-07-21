@@ -39,12 +39,12 @@ public class ComponentManager {
 	}
 	
 	public void loadCoreComponent() throws ComponentLoadException, IOException {
-		final BorderPane core_component = loader.load("Core");
-		final Scene scene = new Scene(core_component);
+		final Componente core_component = loader.load("Core");
+		final Scene scene = new Scene(core_component.getContent());
 		getStage().setScene(scene);
 	}
 		
-	private @EventListener void onStart(StartEvent evt){
+	private @EventListener ComponenteChangeRequestEvent onStart(StartEvent evt){
 		setStage(evt.getStage());
 		getStage().setMaximized(true);
 		try{
@@ -54,16 +54,19 @@ public class ComponentManager {
 			Platform.exit();
 		}
 		getStage().show();
+		return new ComponenteChangeRequestEvent("Prueba1");
 	}
 	
 	private @EventListener ComponenteChangeCommitEvent onComponentChangeRequest(ComponenteChangeRequestEvent evt){
+		LOG.info("se solicito el cambio al componente "+evt.getNewComponent());
 		if(evt.getNewComponent().equals(actualComponent)) {
-			LOG.info("se solicito el cambio al componente "+evt.getNewComponent()+", pero ya estaba cargado actualmente");
+			LOG.info("componente solicitado ya esta cargado actualmente");
 			return null;
 		}
 		// Cargo el componente
+		LOG.info("cargando componente");
 		try{
-			final BorderPane component = (BorderPane)loader.load(evt.getNewComponent());
+			final Componente component = (Componente)loader.load(evt.getNewComponent());
 			return new ComponenteChangeCommitEvent(component);
 		}catch (Exception e) {
 			LOG.error("no se ha podido cargar la clase "+evt.getNewComponent(),e);

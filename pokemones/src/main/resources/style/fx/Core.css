@@ -8,7 +8,7 @@
 
 .tree-cell .button:hover {
 
-	-fx-border-color:white; 
+	-fx-border-color:darkgray; 
 
 }
 
@@ -24,3 +24,59 @@
    -fx-pref-height:5;
    -fx-padding:0;
 }
+
+/* barra de menus */
+.tool-bar{
+	-fx-background-color:black;
+	-fx-padding:0px;
+	-fx-pref-height:35px;
+}
+
+.tool-bar .menu-button .context-menu{
+	-fx-background-color:black;
+	-fx-text-fill: white;
+}
+
+.menu-button{	
+	-fx-border-color:transparent;
+}
+
+.menu-button .label{	
+	-fx-text-fill: white;
+}
+
+.menu-button, .menu-item{
+	-fx-pref-heigth:35px;
+	-fx-border-radius:0px;
+	-fx-background-color:black;
+	 
+}
+
+.tool-bar .menu-button:hover{
+	-fx-border-color:darkgray;
+}
+
+.tool-bar .menu-button:armed{
+	-fx-border-color:darkgray;
+}
+
+#root{
+	-fx-background-color:#141414;
+}
+
+.tree-view{
+	-fx-background-color:black;
+	-fx-border-color:black;
+	-fx-border-width:0 0 0 5;
+}
+
+.menu-button > .arrow-button {
+    -fx-padding: 0;
+}
+
+.menu-button > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+
+

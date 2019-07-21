@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import customfx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.Group?>
+<?import java.lang.Integer?>
+<?import javafx.scene.control.Label?>
+
+<BorderPane
+	fx:controller="com.pokemon.pokemones.controller.HomeController"
+	fx:id="home" xmlns="https://javafx.com/javafx/8"
+	xmlns:fx="https://javafx.com/fxml" >
+	<center>
+		<Label text="home"/>
+	</center>
+		
+</BorderPane>
+

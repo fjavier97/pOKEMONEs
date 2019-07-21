@@ -1,0 +1,22 @@
+{"properties": [
+  {
+    "name": "fx.view.prefix",
+    "type": "java.lang.String",
+    "description": "ruta a los templates javafx"
+  },
+  {
+    "name": "fx.view.suffix",
+    "type": "java.lang.String",
+    "description": "extension de los templates javafx"
+  },
+  {
+    "name": "fx.css.prefix",
+    "type": "java.lang.String",
+    "description": "ruta a los css de javafx"
+  },
+  {
+    "name": "fx.css.suffix",
+    "type": "java.lang.String",
+    "description": "extension de los css de javafx"
+  }
+]}

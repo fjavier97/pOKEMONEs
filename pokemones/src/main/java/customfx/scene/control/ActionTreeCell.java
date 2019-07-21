@@ -32,7 +32,7 @@ public class ActionTreeCell<E> extends TreeCell<E>{
     	
         super.updateItem(item, empty);
         
-        this.setStyle("-fx-background-color:purple;");
+        this.setStyle("-fx-background-color:#50005E;");
         
         ((Region)getDisclosureNode()).prefHeightProperty().bind(this.heightProperty());
         // npi de por que es /3, deberia ser /2, pero no funciona y asi si.

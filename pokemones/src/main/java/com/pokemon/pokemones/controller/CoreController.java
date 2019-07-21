@@ -4,14 +4,23 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import com.pokemon.pokemones.Componente;
+import com.pokemon.pokemones.ComponenteChangeCommitEvent;
+import com.pokemon.pokemones.ComponenteChangeRequestEvent;
+
 import javafx.fxml.FXML;
+import javafx.scene.paint.Color;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -21,65 +30,90 @@ import customfx.scene.control.TreeMenu;
 @Component
 public class CoreController implements Initializable {
 
-	private @FXML StackPane navigation_menu_container;
+	private final ApplicationEventPublisher publisher;
+	
+	private @FXML MenuButton hola;
+	
+	private @FXML ToolBar menus;
+	
+	private @FXML BorderPane root;
 	private boolean navigation_menu_hidden=false;
 	
-	private @FXML VBox navigation_menu;
+	private @FXML HBox navigation_menu;
 	private Button show_navigation_menu;
 	
-	@FXML private SplitPane splitpane;
 	@FXML private TreeMenu<String> tree;
 	
 	@FXML private StackPane content;
 	
-	@Autowired
-	public CoreController() {
-		// TODO Auto-generated constructor stub
+	
+	public @Autowired CoreController(ApplicationEventPublisher publisher) {
+		this.publisher = publisher;
 	}
 	
 	public void toggleHide() {
-		navigation_menu_container.getChildren().clear();
 		if(navigation_menu_hidden) {
-			navigation_menu_container.setMaxWidth(-1.0);
-			navigation_menu_container.setMinWidth(-1.0);
-			navigation_menu_container.setPrefWidth(500.0);
-			navigation_menu_container.getChildren().add(navigation_menu);
+			root.setLeft(navigation_menu);
 		}else {
-			navigation_menu_container.setMaxWidth(35.0);
-			navigation_menu_container.setMinWidth(35.0);
-			navigation_menu_container.getChildren().add(show_navigation_menu);
+			root.setLeft(show_navigation_menu);
 		}
 		navigation_menu_hidden = !navigation_menu_hidden;
 		
 		
 	}
 	
+	public void setContentComponent(final Componente component) {
+		System.out.println(component);
+		boolean vacio = false;
+		BorderPane anterior = null;
+		try {
+			anterior = (BorderPane)this.content.getChildren().get(0);
+		}catch(IndexOutOfBoundsException ex){
+			vacio = true;
+		}
+		this.content.getChildren().add(component.getContent());
+		component.getContent().toFront();
+		if(!vacio) {
+			this.content.getChildren().remove(anterior);
+		}
+		System.out.println("componente cambiado");
+	}
+	
+	private void setMenus(final Componente component) {
+		this.menus.getItems().clear();
+		if(component.hasMenu()) {			
+			this.menus.getItems().addAll(component.getMenus());
+		}
+	}
+
+	
+	private @EventListener void onComponentChangeCommitEvent(final ComponenteChangeCommitEvent evt) {
+		setContentComponent(evt.getComponente());
+		setMenus(evt.getComponente());
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 		show_navigation_menu = new Button("->");
+		show_navigation_menu.setPrefHeight(1000000000);
 		show_navigation_menu.setOnAction(e->toggleHide());
-			
-		TreeItem<String> root = new TreeItem<>();
-		TreeItem<String> i1 = new ActionTreeItem<>("menu1",e->{System.out.println("hola1");});
-		TreeItem<String> i2 = new ActionTreeItem<>("menu2 (sin accion)");
-		TreeItem<String> i8 = new ActionTreeItem<>("submenu8 (sin accion)");
-		TreeItem<String> i3 = new ActionTreeItem<>("menu3",e->{System.out.println("hola3");});
-		TreeItem<String> i4 = new ActionTreeItem<>("submenu4",e->{System.out.println("hola4");});
-		TreeItem<String> i5 = new ActionTreeItem<>("submenu5",e->{System.out.println("hola5");});
-		TreeItem<String> i6 = new ActionTreeItem<>("submenu6",e->{System.out.println("hola6");});
-		TreeItem<String> i7 = new ActionTreeItem<>("submenu7",e->{System.out.println("hola7");});
 		
-		root.getChildren().addAll(i1,i2,i3);
-		i1.getChildren().addAll(i4,i5);
-		i2.getChildren().addAll(i7);
-		i3.getChildren().addAll(i8);
-		i7.getChildren().addAll(i6);
+		TreeItem<String> root = new ActionTreeItem<>();
+		TreeItem<String> p = new ActionTreeItem<>("pruebas");
+		TreeItem<String> p1 = new ActionTreeItem<>(
+				"prueba1",
+				e->{publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba1"));});
+		TreeItem<String> p2 = new ActionTreeItem<>(
+				"prueba2",
+				e->{publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba2"));});
+		root.getChildren().add(p);
+		p.getChildren().addAll(p1,p2);
 		
 		tree.setShowRoot(false);
 		tree.setRoot(root);
 		
-		splitpane.setDividerPositions(0.2);
+		hola.setTextFill(Color.WHITE);
 		
 	}
 

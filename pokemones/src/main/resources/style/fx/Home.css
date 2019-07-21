@@ -1,0 +1,7 @@
+.label{
+	-fx-text-fill: black;
+}
+
+BorderPane{
+	-fx-background-color:lightblue;
+}

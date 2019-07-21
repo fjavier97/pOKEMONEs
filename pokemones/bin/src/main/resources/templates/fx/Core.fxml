@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import customfx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.Group?>
+<?import java.lang.Integer?>
+<?import javafx.scene.layout.StackPane?>
+
+
+<BorderPane fx:controller="com.pokemon.pokemones.controller.CoreController" fx:id="root"
+			xmlns="https://javafx.com/javafx/8"	xmlns:fx="https://javafx.com/fxml">
+	<top>
+		<Label text="aqui titulo"/>
+	</top>
+	<center>
+		<SplitPane fx:id="splitpane">
+			<StackPane fx:id="navigation_menu_container">		
+				<VBox fx:id="navigation_menu" prefWidth="500">
+					<Button text="hide menu" onAction="#toggleHide" prefWidth="100000000000"/>
+					<TreeMenu VBox.vgrow="ALWAYS" fx:id="tree" />
+				</VBox>
+			</StackPane>
+			<StackPane fx:id="content" />
+		</SplitPane>
+	</center>
+	<bottom>
+		<Label text="aqui footer"/>
+	</bottom>
+</BorderPane>
+

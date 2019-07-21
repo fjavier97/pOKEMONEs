@@ -4,14 +4,14 @@ import javafx.scene.layout.BorderPane;
 
 public class ComponenteChangeCommitEvent {
 
-	private final BorderPane componente;
+	private final Componente componente;
 
-	public ComponenteChangeCommitEvent(final BorderPane componente) {
+	public ComponenteChangeCommitEvent(final Componente componente) {
 		super();
 		this.componente = componente;
 	}
 
-	public BorderPane getComponente() {
+	public Componente getComponente() {
 		return componente;
 	}
 	
