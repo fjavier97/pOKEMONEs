@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.util.HashMap?>
+<?import java.lang.Integer?>
+<?import javafx.scene.control.*?>
+<?import com.pokemon.pokemones.MyInt?>
+
+<HashMap xmlns:fx="http://javafx.com/fxml/1">
+	<uno>
+		<Menu text="menu1"/>
+	</uno>
+	<dos>
+		<Menu text="menu2"/>
+	</dos>
+</HashMap>
+

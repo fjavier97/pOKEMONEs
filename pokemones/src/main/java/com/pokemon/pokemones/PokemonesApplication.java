@@ -1,10 +1,15 @@
 package com.pokemon.pokemones;
 
+import java.util.Map;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Menu;
 import javafx.stage.Stage;
 
 @SpringBootApplication
@@ -31,6 +36,12 @@ public class PokemonesApplication extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		context.publishEvent(new StartEvent(primaryStage));
 		
+//		FXMLLoader loader = new FXMLLoader(getClass().getResource("map.fxml"));
+//		Map<String, Menu> map = loader.load();
+//		for(String k:map.keySet()) {
+//			System.out.println(map.get(k).toString());
+//		}
+//		Platform.exit();
 	}
 
 }
