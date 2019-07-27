@@ -8,73 +8,36 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.Group?>
 <?import java.lang.Integer?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.RadioMenuItem?>
-<?import javafx.scene.layout.BorderPane?>
+<?import com.pokemon.pokemones.Componente?>
 
-<BorderPane
-	fx:controller="com.pokemon.pokemones.controller.CoreController"
-	fx:id="root" xmlns="https://javafx.com/javafx/8"
-	xmlns:fx="https://javafx.com/fxml">
-	<top>
-		<ToolBar fx:id="menus">
-			<!-- <Label text="aqui titulo" /> -->
-			<Pane prefWidth="2"/>
-			<MenuButton text="archivo" fx:id="hola" disable="true">
-				<items>
-					<MenuItem text="abrir" />
-					<Menu text="importar">
-						<MenuItem text="XML" />
-						<MenuItem text="CSV" />
-					</Menu>
-					<SeparatorMenuItem />
-					<MenuItem text="exportar como ..." />
-				</items>
-			</MenuButton>
-			<MenuButton text="editar">
-				<items>
-					<MenuItem text="nuevo" />
-					<MenuItem text="modificar" />
-					<MenuItem text="eliminar " />
-					<MenuItem text="eliminar seleccion" />
-				</items>
-			</MenuButton>
-			<Pane HBox.hgrow="ALWAYS" />
-			<MenuButton text="configuracion">
-				<items>
-					<RadioMenuItem text="ocultar menu"
-						onAction="#toggleHide" />
-					<SeparatorMenuItem />
-					<MenuItem text="cambiar tema" />
-					<MenuItem text="menu de navegacion" />
-				</items>
-			</MenuButton>
-			<Pane prefWidth="2"/>
-		</ToolBar>
-	</top>
-	<left>
-		<HBox fx:id="navigation_menu">
-			<VBox  prefWidth="300">
-				<TreeMenu VBox.vgrow="ALWAYS" fx:id="tree" />
-			</VBox>
-			<VBox  prefWidth="10" >
-				<Button text="" onAction="#toggleHide"
-					VBox.vgrow="ALWAYS" prefWidth="10" />
-			</VBox>
-			
-		</HBox>
-	</left>
-	<center>
-		<StackPane fx:id="content" >
-			<BorderPane ></BorderPane>
-		</StackPane>
-	</center>
-	<bottom>
-		<Label text="aqui footer" />
-	</bottom>
-</BorderPane>
+<Componente fx:controller="com.pokemon.pokemones.controller.CoreController"
+	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
+	<content>
+		<BorderPane fx:id="root">
+			<top>
+				<MenuBar fx:id="menus" />
+			</top>
+			<left>
+				<HBox fx:id="navigation_menu">
+					<VBox  prefWidth="300">
+						<TreeMenu VBox.vgrow="ALWAYS" fx:id="tree" />
+					</VBox>
+					<VBox  prefWidth="10" >
+						<Button text="" onAction="#toggleHide"
+							VBox.vgrow="ALWAYS" prefWidth="10" />
+					</VBox>
+					
+				</HBox>
+			</left>
+			<center>
+				<StackPane fx:id="content" >
+					<BorderPane ></BorderPane>
+				</StackPane>
+			</center>
+			<bottom>
+				<Label text="aqui footer" />
+			</bottom>
+		</BorderPane>
+	</content>
+</Componente>
 

@@ -3,13 +3,28 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.Label?>
+<?import com.pokemon.pokemones.Componente?>
+<?import javafx.scene.control.MenuItem?>
+<?import java.util.HashMap?>
 
-<BorderPane 
-	fx:controller="com.pokemon.pokemones.controller.Prueba1Controller"
+<Componente fx:controller="com.pokemon.pokemones.controller.Prueba1Controller"
 	xmlns="https://javafx.com/javafx/8"
-	xmlns:fx="https://javafx.com/fxml" >
-	<center>
-		<Label text="prueba1" style="-fx-text-fill: white;"/>
-	</center>
-</BorderPane>
+	xmlns:fx="https://javafx.com/fxml">
+	<menus>
+		<HashMap>
+			<archivo>
+				<Menu>
+					<MenuItem onAction="#prueba1"/>
+				</Menu>
+			</archivo>
+		</HashMap>
+	</menus>
+	<content>
+		<BorderPane >
+			<center>
+				<Label text="prueba1" style="-fx-text-fill: white;"/>
+			</center>
+		</BorderPane>
+	</content>
+</Componente>
 

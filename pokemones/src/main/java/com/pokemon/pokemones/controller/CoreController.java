@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,8 @@ import javafx.fxml.FXML;
 import javafx.scene.paint.Color;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeItem;
@@ -27,14 +30,13 @@ import javafx.scene.layout.VBox;
 import customfx.scene.control.ActionTreeItem;
 import customfx.scene.control.TreeMenu;
 
-@Component
+@Component("Core")
+@Scope("ComponentScope")
 public class CoreController implements Initializable {
 
 	private final ApplicationEventPublisher publisher;
 	
-	private @FXML MenuButton hola;
-	
-	private @FXML ToolBar menus;
+	private @FXML MenuBar menus;
 	
 	private @FXML BorderPane root;
 	private boolean navigation_menu_hidden=false;
@@ -80,9 +82,17 @@ public class CoreController implements Initializable {
 	}
 	
 	private void setMenus(final Componente component) {
-		this.menus.getItems().clear();
-		if(component.hasMenu()) {			
-			this.menus.getItems().addAll(component.getMenus());
+		this.menus.getMenus().clear();
+		if(component.hasMenu()) {	
+			//TODO
+			for(String s : component.getMenus().keySet()) {
+				final Menu m = component.getMenus().get(s);
+				if(m.getText()==null || m.getText().equals("")) {
+					m.setText(s);
+				}
+				this.menus.getMenus().add(m);
+			}
+			
 		}
 	}
 
@@ -113,7 +123,6 @@ public class CoreController implements Initializable {
 		tree.setShowRoot(false);
 		tree.setRoot(root);
 		
-		hola.setTextFill(Color.WHITE);
 		
 	}
 

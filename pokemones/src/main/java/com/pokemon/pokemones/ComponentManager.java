@@ -9,6 +9,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -19,15 +21,22 @@ public class ComponentManager {
 	private final Logger LOG;
 	
 	private Stage stage;
-	private String actualComponent;
-//	private final Myscope myscope
+	private StringProperty actualComponent;
+	private final ComponentScope scope;
 	private final ComponentLoader loader;	
 	
 	
-	public @Autowired ComponentManager(ComponentLoader loader) {
+	public @Autowired ComponentManager(ComponentLoader loader, ComponentScope scope) {
 		super();
 		this.LOG=LoggerFactory.getLogger(ComponentManager.class);
 		this.loader=loader;
+		this.scope=scope;
+		actualComponent = new SimpleStringProperty();
+		actualComponent.addListener((ob,viejo,nuevo)->{
+			if(viejo!=null) {
+				scope.remove(viejo);
+			}
+		});
 	}
 	
 	public Stage getStage() {
@@ -40,6 +49,7 @@ public class ComponentManager {
 	
 	public void loadCoreComponent() throws ComponentLoadException, IOException {
 		final Componente core_component = loader.load("Core");
+		System.out.println(core_component.getContent());
 		final Scene scene = new Scene(core_component.getContent());
 		getStage().setScene(scene);
 	}
@@ -59,7 +69,7 @@ public class ComponentManager {
 	
 	private @EventListener ComponenteChangeCommitEvent onComponentChangeRequest(ComponenteChangeRequestEvent evt){
 		LOG.info("se solicito el cambio al componente "+evt.getNewComponent());
-		if(evt.getNewComponent().equals(actualComponent)) {
+		if(evt.getNewComponent().equals(actualComponent.get())) {
 			LOG.info("componente solicitado ya esta cargado actualmente");
 			return null;
 		}
@@ -67,6 +77,7 @@ public class ComponentManager {
 		LOG.info("cargando componente");
 		try{
 			final Componente component = (Componente)loader.load(evt.getNewComponent());
+			actualComponent.set(evt.getNewComponent());
 			return new ComponenteChangeCommitEvent(component);
 		}catch (Exception e) {
 			LOG.error("no se ha podido cargar la clase "+evt.getNewComponent(),e);

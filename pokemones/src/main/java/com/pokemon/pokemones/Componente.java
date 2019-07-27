@@ -1,14 +1,13 @@
 package com.pokemon.pokemones;
 
-import java.util.LinkedList;
+import java.util.Map;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.Menu;
 import javafx.scene.layout.BorderPane;
 
 public class Componente {
 	
-	private LinkedList<Button> menus;
+	private Map<String,Menu> menus;
 	private BorderPane content;
 	
 	public Componente() {
@@ -21,16 +20,16 @@ public class Componente {
 		this.menus = null;
 	}
 	
-	public Componente(BorderPane content, LinkedList<Button> menus) {
+	public Componente(BorderPane content, Map<String,Menu> menus) {
 		this.content=content;
 		this.menus = menus;
 	}
 
-	public LinkedList<Button> getMenus() {
+	public Map<String,Menu> getMenus() {
 		return menus;
 	}
 
-	public void setMenus(LinkedList<Button> menus) {
+	public void setMenus(Map<String,Menu> menus) {
 		this.menus = menus;
 	}
 	

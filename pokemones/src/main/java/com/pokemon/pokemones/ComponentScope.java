@@ -20,17 +20,15 @@ public class ComponentScope implements Scope {
 		this.beans=new ConcurrentHashMap<>();
 		this.destructionCallbacks=new ConcurrentHashMap<>();
 	}
-
-	@Override
-	public Object get(String name, ObjectFactory<?> objectFactory) {
+	
+	public @Override Object get(String name, ObjectFactory<?> objectFactory) {
 		if(!beans.containsKey(name)) {
 			beans.put(name, objectFactory.getObject());
 		}
 		return beans.get(name);
 	}
-
-	@Override
-	public Object remove(String name) {
+	
+	public @Override Object remove(String name) {
 		if(destructionCallbacks.containsKey(name)) {
 			destructionCallbacks.remove(name).run();
 		}
@@ -43,24 +41,22 @@ public class ComponentScope implements Scope {
 		}
 	}
 	
-	private @EventListener void onContextClosed(ComponenteChangeCommitEvent evt) {
+	private @EventListener void onComponentChanged(ComponenteChangeCommitEvent evt) {
 		remove(evt.getComponente().toString());
 	}
 
-	@Override
-	public void registerDestructionCallback(String name, Runnable callback) {
+	
+	public @Override void registerDestructionCallback(String name, Runnable callback) {
 		this.destructionCallbacks.put(name, callback);
 
 	}
 
-	@Override
-	public Object resolveContextualObject(String key) {
+	public @Override Object resolveContextualObject(String key) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public String getConversationId() {
+	public @Override String getConversationId() {
 		// TODO Auto-generated method stub
 		return null;
 	}

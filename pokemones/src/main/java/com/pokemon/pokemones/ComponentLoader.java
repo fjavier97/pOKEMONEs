@@ -2,8 +2,6 @@ package com.pokemon.pokemones;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +11,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.BorderPane;
-
 @Component
 public class ComponentLoader {
 	
@@ -50,52 +44,50 @@ public class ComponentLoader {
 	public Componente load(final String name) throws ComponentLoadException, IOException{
 		final String fulltemplatepath = fx_prefix+name+fx_suffix;
 		final String csspath = fx_css_prefix+name+fx_css_suffix;	
-		final Componente res = new Componente();
+		
 		
 		FXMLLoader loader = new FXMLLoader();
 		
 		/* configuro la vista */
 		final URL templateurl = getClass().getResource(fulltemplatepath);
+		
 		if(templateurl==null) {
 			LOG.error("error registrando componente "+name+", no se ha encontrado clase a cargar "+fulltemplatepath);
 			throw new ComponentLoadException(name, "no se ha encontrado el fichero de definicion del componenet");
 		}else {
 			loader.setLocation(templateurl);
-		}			
+		}		
+		
+		LOG.info(templateurl.toString());
 		
 		/* configuro controlador */
 		loader.setControllerFactory(ctx::getBean);
 		
 		/* cargo el componente y añado la hoja de css */
 		try {
-			final BorderPane component = loader.load();
+			
+			final Componente res = loader.load();
 			final URL cssurl = getClass().getResource(csspath);
 			if(cssurl==null){
-				LOG.warn("error registrando componente "+name+", no se ha encontrado clase a cargar "+csspath);
+				LOG.info("no se ha encontrado hoja de estilos asociada con el componente"+name+"");
 			}else {
-				component.getStylesheets().add(csspath);
+				if(res.getContent()!=null) {
+					res.getContent().getStylesheets().add(csspath);
+				}
 			}
-			/* TODO aqui podemos poner alguna forma de pasarle parametros al controlador */
-			res.setContent(component);
-			System.out.println(component);
+			
+			/* para debug imprimimos estado del componente */
+			LOG.debug(res.toString());
+			if(res.getContent()!=null)
+				LOG.debug(res.getContent().toString());
+			if(res.getMenus()!=null)
+				LOG.debug(res.getMenus().toString());
+			
+			return res;
+			
 		}catch (Exception e) {
 			throw e;
-		}		
-		
-		try {
-			loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource(fx_prefix+"menus/"+name+fx_suffix));
-			loader.setControllerFactory(ctx::getBean);
-			LinkedList<Button> m = loader.load();
-			res.setMenus(m);
-			System.out.println(m.toString());
-		}catch (Exception e) {
-			System.out.println(fx_prefix+"menus/"+name+fx_suffix);
-			e.printStackTrace();
-		}
-		
-		
-		return res;
+		}			
 	}
 	
 	
