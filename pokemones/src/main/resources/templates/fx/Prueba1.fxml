@@ -5,24 +5,23 @@
 <?import javafx.scene.control.Label?>
 <?import com.pokemon.pokemones.Componente?>
 <?import javafx.scene.control.MenuItem?>
-<?import java.util.HashMap?>
+<?import customfx.scene.control.*?>
+<?import javafx.util.Pair?>
+<?import java.util.LinkedList?>
+<?import java.lang.String?>
 
 <Componente fx:controller="com.pokemon.pokemones.controller.Prueba1Controller"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>
-		<HashMap>
-			<archivo>
-				<Menu>
-					<MenuItem onAction="#prueba1"/>
-				</Menu>
-			</archivo>
-		</HashMap>
+		<LinkedList>
+			<MenuDefinition text="preuba" path="/archivo/pruebas" onAction="#prueba1"/>
+		</LinkedList>
 	</menus>
 	<content>
 		<BorderPane >
 			<center>
-				<Label text="prueba1" style="-fx-text-fill: white;"/>
+				<Label text="prueba1 &lt;" style="-fx-text-fill: white;"/>
 			</center>
 		</BorderPane>
 	</content>

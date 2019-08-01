@@ -9,29 +9,36 @@
 <?import javafx.scene.Group?>
 <?import java.lang.Integer?>
 <?import com.pokemon.pokemones.Componente?>
+<?import java.util.LinkedList?>
+<?import java.util.LinkedList?>
 
 <Componente fx:controller="com.pokemon.pokemones.controller.CoreController"
 	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
+	<menus>
+		<LinkedList>
+			<MenuDefinition text="prueba" path="/opciones/pruebas"/>
+		</LinkedList>
+	</menus>
 	<content>
 		<BorderPane fx:id="root">
 			<top>
-				<MenuBar fx:id="menus" />
+				<ConfigurableMenuBar fx:id="menus" />
 			</top>
 			<left>
 				<HBox fx:id="navigation_menu">
-					<VBox  prefWidth="300">
+					<VBox prefWidth="300">
 						<TreeMenu VBox.vgrow="ALWAYS" fx:id="tree" />
 					</VBox>
-					<VBox  prefWidth="10" >
-						<Button text="" onAction="#toggleHide"
-							VBox.vgrow="ALWAYS" prefWidth="10" />
+					<VBox prefWidth="10" style="-fx-background-color:red;">
+						<Button text="&gt;" onAction="#toggleHide"
+							VBox.vgrow="ALWAYS" prefWidth="10" prefHeight="10000"/>
 					</VBox>
 					
 				</HBox>
 			</left>
 			<center>
 				<StackPane fx:id="content" >
-					<BorderPane ></BorderPane>
+				
 				</StackPane>
 			</center>
 			<bottom>

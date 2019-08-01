@@ -29,6 +29,7 @@ public class ComponentScope implements Scope {
 	}
 	
 	public @Override Object remove(String name) {
+		System.out.println("remove "+name);
 		if(destructionCallbacks.containsKey(name)) {
 			destructionCallbacks.remove(name).run();
 		}

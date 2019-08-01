@@ -11,6 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXMLLoader;
+
+
 @Component
 public class ComponentLoader {
 	
@@ -85,6 +87,8 @@ public class ComponentLoader {
 			
 			return res;
 			
+		}catch (ClassCastException e1) {
+			throw new ComponentLoadException(name, "la definicion del componente no tiene el formato correcto");
 		}catch (Exception e) {
 			throw e;
 		}			

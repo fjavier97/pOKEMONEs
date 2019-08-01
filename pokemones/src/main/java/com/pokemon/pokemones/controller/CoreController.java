@@ -3,6 +3,8 @@ package com.pokemon.pokemones.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
@@ -28,15 +30,20 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import customfx.scene.control.ActionTreeItem;
+import customfx.scene.control.ConfigurableMenuBar;
+import customfx.scene.control.MenuCretionException;
+import customfx.scene.control.MenuDefinition;
 import customfx.scene.control.TreeMenu;
 
 @Component("Core")
 @Scope("ComponentScope")
 public class CoreController implements Initializable {
 
+	private final Logger LOG;
+	
 	private final ApplicationEventPublisher publisher;
 	
-	private @FXML MenuBar menus;
+	private @FXML ConfigurableMenuBar menus;
 	
 	private @FXML BorderPane root;
 	private boolean navigation_menu_hidden=false;
@@ -44,13 +51,17 @@ public class CoreController implements Initializable {
 	private @FXML HBox navigation_menu;
 	private Button show_navigation_menu;
 	
-	@FXML private TreeMenu<String> tree;
+	private @FXML TreeMenu tree;
 	
 	@FXML private StackPane content;
 	
+	public ConfigurableMenuBar getMenus() {
+		return menus;
+	}
 	
 	public @Autowired CoreController(ApplicationEventPublisher publisher) {
 		this.publisher = publisher;
+		LOG = LoggerFactory.getLogger(CoreController.class);
 	}
 	
 	public void toggleHide() {
@@ -82,17 +93,15 @@ public class CoreController implements Initializable {
 	}
 	
 	private void setMenus(final Componente component) {
-		this.menus.getMenus().clear();
+		this.menus.clean();
 		if(component.hasMenu()) {	
-			//TODO
-			for(String s : component.getMenus().keySet()) {
-				final Menu m = component.getMenus().get(s);
-				if(m.getText()==null || m.getText().equals("")) {
-					m.setText(s);
+			for(MenuDefinition m : component.getMenus()) {
+				try {
+					this.menus.addMenu(m);
+				}catch(MenuCretionException mce) {
+					LOG.error("no se pudo registrar el menu ["+m.getText()+"] :"+m.getPath());
 				}
-				this.menus.getMenus().add(m);
-			}
-			
+			}			
 		}
 	}
 
@@ -107,22 +116,11 @@ public class CoreController implements Initializable {
 		
 		show_navigation_menu = new Button("->");
 		show_navigation_menu.setPrefHeight(1000000000);
+		show_navigation_menu.setPrefWidth(10);
 		show_navigation_menu.setOnAction(e->toggleHide());
-		
-		TreeItem<String> root = new ActionTreeItem<>();
-		TreeItem<String> p = new ActionTreeItem<>("pruebas");
-		TreeItem<String> p1 = new ActionTreeItem<>(
-				"prueba1",
-				e->{publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba1"));});
-		TreeItem<String> p2 = new ActionTreeItem<>(
-				"prueba2",
-				e->{publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba2"));});
-		root.getChildren().add(p);
-		p.getChildren().addAll(p1,p2);
-		
-		tree.setShowRoot(false);
-		tree.setRoot(root);
-		
+
+		tree.addEntry("/pruebas", "prueba1", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba1")));
+		tree.addEntry("/pruebas", "prueba2", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba2")));
 		
 	}
 
