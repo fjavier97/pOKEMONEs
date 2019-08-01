@@ -36,17 +36,12 @@ public class ComponentScope implements Scope {
 		return beans.remove(name);
 	}
 	
-	private @EventListener void onContextClosed(ContextClosedEvent evt) {
-		for(String key: beans.keySet()) {
-			remove(key);
+	public void removeAll() {
+		for(String k: beans.keySet()) {
+			remove(k);
 		}
 	}
-	
-	private @EventListener void onComponentChanged(ComponenteChangeCommitEvent evt) {
-		remove(evt.getComponente().toString());
-	}
-
-	
+		
 	public @Override void registerDestructionCallback(String name, Runnable callback) {
 		this.destructionCallbacks.put(name, callback);
 

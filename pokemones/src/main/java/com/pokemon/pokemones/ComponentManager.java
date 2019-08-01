@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,8 @@ public class ComponentManager {
 
 	private final Logger LOG;
 	
+	private final ComponentScope scope;
+	
 	private Stage stage;
 	private StringProperty actualComponent;
 	private final CoreController cc;
@@ -33,6 +36,7 @@ public class ComponentManager {
 		super();
 		this.LOG=LoggerFactory.getLogger(ComponentManager.class);
 		this.loader=loader;
+		this.scope=scope;
 		this.cc=cc;
 		actualComponent = new SimpleStringProperty();
 		actualComponent.addListener((ob,viejo,nuevo)->{
@@ -66,6 +70,10 @@ public class ComponentManager {
 		getStage().setScene(scene);
 	}
 		
+	private @EventListener void onStop(ContextClosedEvent evt){
+		scope.removeAll();
+	}
+	
 	private @EventListener ComponenteChangeRequestEvent onStart(StartEvent evt){
 		setStage(evt.getStage());
 		getStage().setMaximized(true);

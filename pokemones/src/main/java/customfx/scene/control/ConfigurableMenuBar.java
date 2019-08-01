@@ -17,7 +17,6 @@ public class ConfigurableMenuBar extends MenuBar{
 	public ConfigurableMenuBar() {
 		super();
 		systemMenus= new HashMap<String, Menu>();
-		registerSystemMenu("opciones");
 	}
 	
 	public void clean() {
@@ -85,7 +84,9 @@ public class ConfigurableMenuBar extends MenuBar{
 		/* creo cursor para recorrer el arbor */
 		Menu cursorPadre=systemMenus.get(rutas[0]);
 		if(cursorPadre==null) {
-			throw new MenuCretionException();
+			//throw new MenuCretionException();
+			registerSystemMenu(rutas[0]);
+			cursorPadre=systemMenus.get(rutas[0]);
 		}
 		Menu cursorHijo=null;
 		
