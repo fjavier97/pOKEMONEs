@@ -1,13 +1,13 @@
 package com.pokemon.pokemones;
 
-import java.util.Map;
+import java.util.List;
 
-import javafx.scene.control.Menu;
+import customfx.scene.control.MenuDefinition;
 import javafx.scene.layout.BorderPane;
 
 public class Componente {
 	
-	private Map<String,Menu> menus;
+	private List<MenuDefinition> menus;
 	private BorderPane content;
 	
 	public Componente() {
@@ -20,16 +20,16 @@ public class Componente {
 		this.menus = null;
 	}
 	
-	public Componente(BorderPane content, Map<String,Menu> menus) {
+	public Componente(BorderPane content, List<MenuDefinition> menus) {
 		this.content=content;
 		this.menus = menus;
 	}
 
-	public Map<String,Menu> getMenus() {
+	public List<MenuDefinition> getMenus() {
 		return menus;
 	}
 
-	public void setMenus(Map<String,Menu> menus) {
+	public void setMenus(List<MenuDefinition> menus) {
 		this.menus = menus;
 	}
 	

@@ -9,30 +9,53 @@
 <?import javafx.scene.Group?>
 <?import java.lang.Integer?>
 <?import com.pokemon.pokemones.Componente?>
+<?import java.util.LinkedList?>
+<?import java.util.LinkedList?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ListView?>
 
 <Componente fx:controller="com.pokemon.pokemones.controller.CoreController"
 	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
+	<menus>
+		<LinkedList>
+			<MenuDefinition text="prueba" path="/opciones/pruebas"/>
+		</LinkedList>
+	</menus>
 	<content>
 		<BorderPane fx:id="root">
 			<top>
-				<MenuBar fx:id="menus" />
+				<ConfigurableMenuBar fx:id="menus" />
 			</top>
 			<left>
-				<HBox fx:id="navigation_menu">
-					<VBox  prefWidth="300">
-						<TreeMenu VBox.vgrow="ALWAYS" fx:id="tree" />
-					</VBox>
-					<VBox  prefWidth="10" >
-						<Button text="" onAction="#toggleHide"
-							VBox.vgrow="ALWAYS" prefWidth="10" />
-					</VBox>
-					
-				</HBox>
+				
 			</left>
 			<center>
-				<StackPane fx:id="content" >
-					<BorderPane ></BorderPane>
-				</StackPane>
+				<SplitPane fx:id="sp">
+					<fx:define>
+						<Button fx:id="show_navigation_menu" text="-&gt;" onAction="#toggleHide" VBox.vgrow="ALWAYS" prefWidth="10" prefHeight="10000"/>
+						<HBox fx:id="navigation_menu">
+							<VBox minWidth="200" prefWidth="3000000">
+								<Button text="&lt;&lt;&lt;" onAction="#toggleHide" prefHeight="10" prefWidth="10000"/>
+								<TreeMenu VBox.vgrow="ALWAYS" fx:id="tree"/>
+								<ListView fx:id="notificationarea" prefHeight="350"/>
+							</VBox><!-- 
+							<VBox prefWidth="10" style="-fx-background-color:red;">
+								<Button text="&gt;" onAction="#toggleHide"
+									VBox.vgrow="ALWAYS" prefWidth="10" prefHeight="10000"/>
+							</VBox>	 -->				
+						</HBox>
+					</fx:define>
+					<StackPane fx:id="menu_container" SplitPane.resizableWithParent="FALSE">
+					
+					</StackPane>
+					<StackPane fx:id="content" >
+						<clip><!-- esto sirve para que en las animaciones no aparezcan los componentes por encima de la ventana -->
+		    				<Rectangle width="${content.width}" height="${content.height}"/>
+		  				</clip>
+					</StackPane>
+				</SplitPane>				
 			</center>
 			<bottom>
 				<Label text="aqui footer" />

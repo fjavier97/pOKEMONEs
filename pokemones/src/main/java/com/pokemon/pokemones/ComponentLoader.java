@@ -2,6 +2,8 @@ package com.pokemon.pokemones;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javafx.fxml.FXMLLoader;
+
+
 @Component
 public class ComponentLoader {
 	
@@ -39,9 +43,16 @@ public class ComponentLoader {
 		this.fx_css_prefix=fx_css_prefix;
 		this.fx_css_suffix=fx_css_suffix;
 	}
-	
 
 	public Componente load(final String name) throws ComponentLoadException, IOException{
+		return load(name, null, new HashMap<String,Object>());
+	}
+	
+	public Componente load(final String name, final Map<String,Object> params) throws ComponentLoadException, IOException{
+		return load(name, null, params);
+	}
+	
+	public Componente load(final String name, final AbstractController[] controller, final Map<String,Object> params) throws ComponentLoadException, IOException{
 		final String fulltemplatepath = fx_prefix+name+fx_suffix;
 		final String csspath = fx_css_prefix+name+fx_css_suffix;	
 		
@@ -75,6 +86,8 @@ public class ComponentLoader {
 					res.getContent().getStylesheets().add(csspath);
 				}
 			}
+			/*inyecto los argumentos, el contralodor seencarga de gestionar su estado */
+			((AbstractController)loader.getController()).injectArguments(params);
 			
 			/* para debug imprimimos estado del componente */
 			LOG.debug(res.toString());
@@ -83,8 +96,15 @@ public class ComponentLoader {
 			if(res.getMenus()!=null)
 				LOG.debug(res.getMenus().toString());
 			
+			if(controller!=null) {
+				controller[0] = loader.getController();
+			}			
+			
 			return res;
 			
+		}catch (ClassCastException e1) {
+			e1.printStackTrace();
+			throw new ComponentLoadException(name, "la definicion del componente no tiene el formato correcto");
 		}catch (Exception e) {
 			throw e;
 		}			

@@ -1,23 +1,43 @@
 package com.pokemon.pokemones;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ComponenteChangeRequestEvent {
 
-	private String newComponent;	
+	private final String newComponent;	
+	private final Navigation navigation;
+	private final Map<String, Object> params;
 	
-	public ComponenteChangeRequestEvent() {
-		super();
-	}
+//	public ComponenteChangeRequestEvent() {
+//		super();
+//	}
 
-	public ComponenteChangeRequestEvent(String newComponent) {
+	public ComponenteChangeRequestEvent(final String newComponent, final Navigation navigation) {		
+		this(newComponent, navigation, new HashMap<String, Object>());
+	}
+	
+	public ComponenteChangeRequestEvent(final String newComponent, final Navigation navigation, final Map<String, Object> params) {
 		super();
+		this.params = params;
 		this.newComponent = newComponent;
+		this.navigation = navigation;
+	}
+	
+	public ComponenteChangeRequestEvent(String newComponent) {
+		this(newComponent, Navigation.LINK);
 	}
 
 	public String getNewComponent() {
 		return newComponent;
 	}
-
-	public void setNewComponent(String newComponent) {
-		this.newComponent = newComponent;
+	
+	public Navigation getNavigation() {
+		return navigation;
 	}
+	
+	public Map<String, Object> getParams() {
+		return params;
+	}
+
 }

@@ -28,20 +28,12 @@ public class PokemonesApplication extends Application{
 	
 	@Override
 	public void stop() throws Exception {
-		context.close();
-		
+		context.close();		
 	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		context.publishEvent(new StartEvent(primaryStage));
-		
-//		FXMLLoader loader = new FXMLLoader(getClass().getResource("map.fxml"));
-//		Map<String, Menu> map = loader.load();
-//		for(String k:map.keySet()) {
-//			System.out.println(map.get(k).toString());
-//		}
-//		Platform.exit();
 	}
 
 }

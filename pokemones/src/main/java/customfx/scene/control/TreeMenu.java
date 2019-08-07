@@ -1,42 +1,67 @@
 package customfx.scene.control;
 
+import java.util.Arrays;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
-public class TreeMenu<T> extends TreeView<T> {
+public class TreeMenu extends TreeView<String> {
 
 	public TreeMenu() {
 		super();
-		this.setCellFactory(e ->new ActionTreeCell<T>());
+		setRoot(new ActionTreeItem<String>("root"));
+		setShowRoot(false);
+		setCellFactory(e ->new ActionTreeCell<String>());
 	}
 	
-	public void addEntry(final String path, final TreeItem<T> item) {
-		final String[] rutas = path.trim().split("/");
-		TreeItem<T> cursor = getRoot();
+	public void addEntry(final String path, final TreeItem<String> item) {
+		/* hago split de la ruta */
+		String[] rutas = path.trim().split("/");
+		if(rutas.length>1) {
+			rutas=Arrays.copyOfRange(rutas, 1, rutas.length);
+		}
+		
+		/* creo cursor para recorrer el arbor y lo situo en la raiz */
+		TreeItem<String> cursor = getRoot();
+		
+		/* recorro la ruta especificada buscando los nos en el arbol */
 		for(final String r: rutas) {
-			for(int k = 0; k < cursor.getChildren().size();k++) {
+			
+			/* busco entre los hijos del nodo actual el hijo siguiente en la ruta*/
+			boolean encontrado=false;
+			for(int k = 0; k < cursor.getChildren().size() && !encontrado ; k++) {
+				
+				/* si lo encuentro avanzo el cursor el */
 				if(cursor.getChildren().get(0).getValue().equals(r)) {
 					cursor=cursor.getChildren().get(0);
+					encontrado=true;
 					break;
 				}
+				
+			}			
+			/* si no he encontrado la ruta la creo y avanzo el cursor a el*/
+			if(!encontrado) {
+				ActionTreeItem<String> nuevo = new ActionTreeItem<String>(r);
+				cursor.getChildren().add(nuevo);
+				cursor=nuevo;	
 			}
-			
 		}
+		
+		/* cuando encuentro el lugar inserto el nodo que me han pasado como argumento */
+		cursor.getChildren().add(item);
 	}
 	
-	public void addEntry(final String path, final T elemento, final Node grafico, final EventHandler<ActionEvent> handler) {
-		TreeItem<T> item = new ActionTreeItem<T>(elemento, grafico, handler);
+	public void addEntry(final String path, final String elemento, final Node grafico, final EventHandler<ActionEvent> handler) {
+		TreeItem<String> item = new ActionTreeItem<String>(elemento, grafico, handler);
 		addEntry(path, item);
 	}
 	
-	public void addEntry(final String path, final T elemento, final EventHandler<ActionEvent> handler) {
-		TreeItem<T> item = new ActionTreeItem<T>(elemento,handler);
+	public void addEntry(final String path, final String elemento, final EventHandler<ActionEvent> handler) {
+		TreeItem<String> item = new ActionTreeItem<String>(elemento,handler);
 		addEntry(path, item);
 	}
-	
-	
-	
+		
 }
