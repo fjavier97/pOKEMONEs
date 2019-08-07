@@ -15,13 +15,13 @@
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>
 		<LinkedList>
-			<MenuDefinition text="preuba" path="/archivo/pruebas" onAction="#prueba1"/>
+			<MenuDefinition text="prueba" path="/archivo/pruebas" onAction="#prueba1"/>
 		</LinkedList>
 	</menus>
 	<content>
 		<BorderPane >
 			<center>
-				<Label text="prueba1 &lt;" style="-fx-text-fill: white;"/>
+				<Label text="prueba1" style="-fx-text-fill: white;"/>
 			</center>
 		</BorderPane>
 	</content>
