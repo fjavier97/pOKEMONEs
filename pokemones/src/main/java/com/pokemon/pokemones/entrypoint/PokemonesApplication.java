@@ -1,4 +1,4 @@
-package com.pokemon.pokemones;
+package com.pokemon.pokemones.entrypoint;
 
 import java.util.Map;
 
@@ -6,13 +6,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import com.pokemon.pokemones.core.event.StartEvent;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
 import javafx.stage.Stage;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages={"com.pokemon.pokemones"})
 public class PokemonesApplication extends Application{
 
 	private ConfigurableApplicationContext context;

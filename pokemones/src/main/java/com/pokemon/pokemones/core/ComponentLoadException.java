@@ -1,4 +1,4 @@
-package com.pokemon.pokemones;
+package com.pokemon.pokemones.core;
 
 public class ComponentLoadException extends Exception {
 

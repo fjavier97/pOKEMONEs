@@ -1,4 +1,4 @@
-package com.pokemon.pokemones;
+package com.pokemon.pokemones.core;
 
 import java.io.IOException;
 
@@ -9,7 +9,11 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.pokemon.pokemones.controller.CoreController;
+import com.pokemon.pokemones.core.controller.CoreController;
+import com.pokemon.pokemones.core.event.ComponenteChangeCommitEvent;
+import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.StartEvent;
+import com.pokemon.pokemones.scopes.ComponentScope;
 
 import customfx.scene.control.MenuCretionException;
 import customfx.scene.control.MenuDefinition;
@@ -59,7 +63,8 @@ public class ComponentManager {
 	
 	public void loadCoreComponent() throws ComponentLoadException, IOException {
 		
-		final Componente core_component = loader.load("Core");
+		final Componente core_component = new Componente();
+		loader.load("Core",core_component);
 		
 		final Scene scene = new Scene(core_component.getContent());
 		if(core_component.hasMenu()) {
@@ -109,7 +114,8 @@ public class ComponentManager {
 		LOG.info("cargando componente solicitado");
 		try{
 			/* construyo y paso el estado*/
-			final Componente component = (Componente)loader.load(evt.getNewComponent(), evt.getParams());
+			final Componente component = new Componente();
+			loader.load(evt.getNewComponent(), component, evt.getParams());
 						
 			/* cambio estado */
 			changeComponent(evt.getNewComponent(), evt.getNavigation()!=Navigation.FORWARD);

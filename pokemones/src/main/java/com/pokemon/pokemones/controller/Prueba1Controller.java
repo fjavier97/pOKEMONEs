@@ -7,8 +7,7 @@ import java.util.ResourceBundle;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.pokemon.pokemones.AbstractController;
-
+import customfx.scene.control.AbstractController;
 import javafx.fxml.FXML;
 
 @Component("Prueba1")

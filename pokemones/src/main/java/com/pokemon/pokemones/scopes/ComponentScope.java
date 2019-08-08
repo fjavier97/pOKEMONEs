@@ -1,4 +1,4 @@
-package com.pokemon.pokemones;
+package com.pokemon.pokemones.scopes;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

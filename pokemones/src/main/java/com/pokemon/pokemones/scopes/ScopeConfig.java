@@ -1,4 +1,4 @@
-package com.pokemon.pokemones;
+package com.pokemon.pokemones.scopes;
 
 import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.context.annotation.Bean;

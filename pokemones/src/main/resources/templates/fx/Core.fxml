@@ -8,7 +8,6 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.Group?>
 <?import java.lang.Integer?>
-<?import com.pokemon.pokemones.Componente?>
 <?import java.util.LinkedList?>
 <?import java.util.LinkedList?>
 <?import javafx.scene.shape.Rectangle?>
@@ -16,7 +15,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.ListView?>
 
-<Componente fx:controller="com.pokemon.pokemones.controller.CoreController"
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.controller.CoreController"
 	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
 	<menus>
 		<LinkedList>
@@ -62,5 +61,5 @@
 			</bottom>
 		</BorderPane>
 	</content>
-</Componente>
+</fx:root>
 

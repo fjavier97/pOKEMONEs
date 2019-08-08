@@ -1,4 +1,4 @@
-package com.pokemon.pokemones;
+package customfx.scene.control;
 
 import java.net.URL;
 import java.util.Map;
