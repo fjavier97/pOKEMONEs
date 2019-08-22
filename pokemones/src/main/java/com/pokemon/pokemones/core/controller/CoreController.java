@@ -1,4 +1,4 @@
-package com.pokemon.pokemones.controller;
+package com.pokemon.pokemones.core.controller;
 
 import java.net.URL;
 import java.util.Map;
@@ -12,10 +12,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.pokemon.pokemones.AbstractController;
-import com.pokemon.pokemones.ComponenteChangeCommitEvent;
-import com.pokemon.pokemones.ComponenteChangeRequestEvent;
-import com.pokemon.pokemones.Navigation;
+import com.pokemon.pokemones.core.ComponentManager;
+import com.pokemon.pokemones.core.Navigation;
+import com.pokemon.pokemones.core.event.ComponenteChangeCommitEvent;
+import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.NotificationEvent;
+import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -23,11 +26,16 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.util.Duration;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import customfx.scene.control.ConfigurableMenuBar;
 import customfx.scene.control.MenuCretionException;
 import customfx.scene.control.MenuDefinition;
@@ -36,13 +44,9 @@ import customfx.scene.control.TreeMenu;
 @Component("Core")
 @Scope("ComponentScope")
 public class CoreController extends AbstractController {
-	
-	/* log */
-	private final Logger LOG;
-	
-	/* publicador de eventos */
-	private final ApplicationEventPublisher publisher;
 		
+	private @FXML ListView<Node> notificationarea;
+			
 	/* referencias a la vista */
 	private @FXML ConfigurableMenuBar menus;	
 	
@@ -63,9 +67,8 @@ public class CoreController extends AbstractController {
 		return menus;
 	}
 	
-	public @Autowired CoreController(ApplicationEventPublisher publisher) {
-		this.publisher = publisher;
-		LOG = LoggerFactory.getLogger(CoreController.class);
+	public @Autowired CoreController() {
+		super();
 	}
 	
 	/****
@@ -176,7 +179,13 @@ public class CoreController extends AbstractController {
 		}
 	}
 	
-	public @EventListener void onComponentChangeCommitEvent(final ComponenteChangeCommitEvent evt) {
+	public @EventListener void onNotificationEvent(final NotificationEvent evt) {
+		Label label = new Label(evt.getMessage());
+		notificationarea.getItems().add(label);
+//		label.setBackground(Color.ALICEBLUE);
+	}
+	
+ 	public @EventListener void onComponentChangeCommitEvent(final ComponenteChangeCommitEvent evt) {
 		setContentComponent(evt);
 		setMenus(evt);
 	}
@@ -185,8 +194,9 @@ public class CoreController extends AbstractController {
 	 * metodos llamados durante el ciclo de vida del controlador
 	 * **/
 	
+
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+	public void injectArguments(Map<String, Object> args) {
 		
 		sp.widthProperty().addListener((ob, o, n) -> {
 			if (o.doubleValue() > n.doubleValue())// si pasa a estar pequeña
@@ -223,12 +233,10 @@ public class CoreController extends AbstractController {
 		
 		tree.addEntry("/pruebas", "prueba1", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba1",Navigation.FORWARD)));
 		tree.addEntry("/pruebas", "prueba2", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba2",Navigation.BACKWARD)));
+		tree.addEntry("/pruebas", "pokemon", e->publisher.publishEvent(new ComponenteChangeRequestEvent("PokemonList",Navigation.LINK)));
 		
-	}
-
-	@Override
-	public void injectArguments(Map<String, Object> args) {
-		// TODO Auto-generated method stub
+		publisher.publishEvent(new NotificationEvent("aplicacion iniciada",Threat.INFO));
+		
 		
 	}
 

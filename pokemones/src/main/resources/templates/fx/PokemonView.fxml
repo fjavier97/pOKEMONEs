@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import customfx.scene.control.*?>
+<?import customfx.scene.chart.*?>
+<?import javafx.util.* ?>
+<?import java.util.LinkedList?>
+<?import java.lang.String?>
+<?import customfx.scene.chart.StarChart?>
+
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.PokemonViewController"
+	xmlns="https://javafx.com/javafx/8"
+	xmlns:fx="https://javafx.com/fxml">
+	<menus>
+		<LinkedList>
+			<MenuDefinition text="atras" path="/nevegacion" onAction="#atras"/>
+		</LinkedList>
+	</menus>
+	<content>
+		<BorderPane >
+			<center>
+				<StarChart fx:id="grafico" maxValue="200" autoAdjustOverflow="false" areaColor="BLUE" gridAreaColor="WHITE"/>
+			</center>
+		</BorderPane>
+	</content>
+</fx:root>

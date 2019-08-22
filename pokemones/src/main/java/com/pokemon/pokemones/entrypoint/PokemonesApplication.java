@@ -4,7 +4,9 @@ import java.util.Map;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.pokemon.pokemones.core.event.StartEvent;
 
@@ -14,6 +16,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Menu;
 import javafx.stage.Stage;
 
+@EnableJpaRepositories(basePackages={"com.pokemon.pokemones"})
+@EntityScan("com.pokemon.pokemones")
 @SpringBootApplication(scanBasePackages={"com.pokemon.pokemones"})
 public class PokemonesApplication extends Application{
 

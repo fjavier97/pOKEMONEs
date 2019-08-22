@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import customfx.scene.control.*?>
+<?import javafx.util.* ?>
+<?import java.util.LinkedList?>
+<?import java.lang.String?>
+
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.PokemonEditorController"
+	xmlns="https://javafx.com/javafx/8"
+	xmlns:fx="https://javafx.com/fxml">
+	<menus>
+		<LinkedList>
+	
+		</LinkedList>
+	</menus>
+	<content>
+		<BorderPane >
+			<top>
+				<HBox >
+					<Button text="guardar"  />
+					<Button text="recargars"  />
+					<Pane HBox.hgrow="ALWAYS" />
+					<Button text="atras" onAction="#atras" />
+				</HBox>
+			</top>
+			<center>
+				<GridPane>
+					<Label text="nombre"			GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+					<TextField  	GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+					<Label text="forma"		 		GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+					<TextField		GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+					<Label text="numero pokedex"	GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+					<Spinner		GridPane.columnIndex="1" GridPane.rowIndex="2" editable="TRUE">
+						<valueFactory>
+					        <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="1000"/>
+						</valueFactory>
+					</Spinner>
+					<Label text="tipo1"				GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+					<ComboBox		GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+					<Label text="tipo2"				GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+					<ComboBox		GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+					<Label text="ATK"				GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+					<Spinner		GridPane.columnIndex="1" GridPane.rowIndex="5" editable="TRUE">
+						<valueFactory>
+					        <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="700"/>
+						</valueFactory>
+					</Spinner>
+					<Label text="ATK"				GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+					<Spinner		GridPane.columnIndex="1" GridPane.rowIndex="6" editable="TRUE">
+						<valueFactory>
+					        <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="700"/>
+						</valueFactory>					
+					</Spinner>
+					<Label text="DEF"				GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+					<Spinner		GridPane.columnIndex="1" GridPane.rowIndex="7" editable="TRUE">
+						<valueFactory>
+					        <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="700"/>
+						</valueFactory>					
+					</Spinner>
+					<Label text="SPA"				GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+					<Spinner		GridPane.columnIndex="1" GridPane.rowIndex="8">
+						<valueFactory>
+					        <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="700"/>
+						</valueFactory>					
+					</Spinner>
+					<Label text="SPD"				GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+					<Spinner		GridPane.columnIndex="1" GridPane.rowIndex="9">
+						<valueFactory>
+					        <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="700"/>
+						</valueFactory>					
+					</Spinner>
+					<Label text="SPE"				GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+					<Spinner		GridPane.columnIndex="1" GridPane.rowIndex="10" editable="TRUE">
+						<valueFactory>
+					        <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="700"/>
+						</valueFactory>					
+					</Spinner>
+					<Label text="HP"				GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+					<Spinner		GridPane.columnIndex="1" GridPane.rowIndex="11" editable="TRUE">
+						<valueFactory>
+					        <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="700"/>
+						</valueFactory>					
+					</Spinner>
+				</GridPane>
+			</center>
+		</BorderPane>
+	</content>
+</fx:root>
+

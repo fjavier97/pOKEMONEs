@@ -1,7 +1,9 @@
-package com.pokemon.pokemones;
+package com.pokemon.pokemones.core.event;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.pokemon.pokemones.core.Navigation;
 
 public class ComponenteChangeRequestEvent {
 

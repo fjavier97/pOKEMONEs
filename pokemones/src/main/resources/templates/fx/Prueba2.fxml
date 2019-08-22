@@ -19,7 +19,7 @@
 	<content>
 		<BorderPane >
 			<center>
-				<Label text="prueba2" style="-fx-text-fill: white;"/>
+				<Button text="abrir Prueba1" style="-fx-text-fill: white;" onAction="#prueba2"/>
 			</center>
 		</BorderPane>
 	</content>

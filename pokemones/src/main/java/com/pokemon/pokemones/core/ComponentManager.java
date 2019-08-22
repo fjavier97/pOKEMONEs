@@ -31,19 +31,18 @@ public class ComponentManager {
 	private final ComponentScope scope;
 	
 	private Stage stage;
-	private final CoreController coreComponentController;
+	private CoreController coreComponentController;
 	private final ComponentLoader loader;	
 	
 	private String current_component_name;
 	//private AbstractComponent currentComponentController;
 	
 	
-	public @Autowired ComponentManager(ComponentLoader loader, ComponentScope scope, CoreController coreComponentController) {
+	public @Autowired ComponentManager(ComponentLoader loader, ComponentScope scope) {
 		super();
 		this.LOG=LoggerFactory.getLogger(ComponentManager.class);
 		this.loader=loader;
 		this.scope=scope;
-		this.coreComponentController=coreComponentController;
 	}
 	
 	private void changeComponent(final String nombreNuevoComponente, final boolean borrarAnterior) {
@@ -64,7 +63,7 @@ public class ComponentManager {
 	public void loadCoreComponent() throws ComponentLoadException, IOException {
 		
 		final Componente core_component = new Componente();
-		loader.load("Core",core_component);
+		this.coreComponentController = (CoreController) loader.load("Core",core_component);
 		
 		final Scene scene = new Scene(core_component.getContent());
 		if(core_component.hasMenu()) {

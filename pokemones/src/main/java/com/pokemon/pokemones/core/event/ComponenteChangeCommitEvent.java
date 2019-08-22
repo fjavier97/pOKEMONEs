@@ -1,5 +1,7 @@
-package com.pokemon.pokemones;
+package com.pokemon.pokemones.core.event;
 
+import com.pokemon.pokemones.core.Componente;
+import com.pokemon.pokemones.core.Navigation;
 
 public class ComponenteChangeCommitEvent {
 

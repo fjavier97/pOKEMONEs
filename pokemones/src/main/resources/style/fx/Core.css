@@ -13,19 +13,19 @@
 }
 
 .split-pane:horizontal > .split-pane-divider {
-   -fx-background-color: darkblue;
-   -fx-border-color: darkblue;
+   -fx-background-color: transparent;
+   -fx-border-color: transparent;
    -fx-pref-width:5;
    -fx-padding:0;
 }
 .split-pane:vertical > .split-pane-divider {
-   -fx-background-color: darkblue;
-   -fx-border-color: darkblue;
+   -fx-background-color: transparent;
+   -fx-border-color: transparent;
    -fx-pref-height:5;
    -fx-padding:0;
 }
 
-/* barra de menus */
+/* barra de menus *//*
 .tool-bar{
 	-fx-background-color:black;
 	-fx-padding:0px;
@@ -59,17 +59,17 @@
 .tool-bar .menu-button:armed{
 	-fx-border-color:darkgray;
 }
-
+*/
 #root{
 	-fx-background-color:#141414;
 }
 
 .tree-view{
 	-fx-background-color:black;
-	-fx-border-color:black;
-	-fx-border-width:0 0 0 5;
+	/*-fx-border-color:black;*/
 }
 
+/*
 .menu-button > .arrow-button {
     -fx-padding: 0;
 }
@@ -77,6 +77,4 @@
 .menu-button > .arrow-button > .arrow {
     -fx-padding: 0;
 }
-
-
-
+*/

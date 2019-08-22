@@ -1,4 +1,4 @@
-package com.pokemon.pokemones;
+package com.pokemon.pokemones.core;
 
 import java.io.IOException;
 import java.net.URL;
@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.pokemon.pokemones.core.controller.AbstractController;
+
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.DialogPane;
 
 
 @Component
@@ -44,15 +47,11 @@ public class ComponentLoader {
 		this.fx_css_suffix=fx_css_suffix;
 	}
 
-	public Componente load(final String name) throws ComponentLoadException, IOException{
-		return load(name, null, new HashMap<String,Object>());
-	}
+	public AbstractController load(final String name, final Componente res) throws ComponentLoadException, IOException{
+		return load(name, res, new HashMap<String,Object>());
+	}	
 	
-	public Componente load(final String name, final Map<String,Object> params) throws ComponentLoadException, IOException{
-		return load(name, null, params);
-	}
-	
-	public Componente load(final String name, final AbstractController[] controller, final Map<String,Object> params) throws ComponentLoadException, IOException{
+	public AbstractController load(final String name, final Componente res, final Map<String,Object> params) throws ComponentLoadException, IOException{
 		final String fulltemplatepath = fx_prefix+name+fx_suffix;
 		final String csspath = fx_css_prefix+name+fx_css_suffix;	
 		
@@ -77,7 +76,10 @@ public class ComponentLoader {
 		/* cargo el componente y añado la hoja de css */
 		try {
 			
-			final Componente res = loader.load();
+			loader.setRoot(res);
+			
+			loader.load();
+			
 			final URL cssurl = getClass().getResource(csspath);
 			if(cssurl==null){
 				LOG.info("no se ha encontrado hoja de estilos asociada con el componente"+name+"");
@@ -96,11 +98,7 @@ public class ComponentLoader {
 			if(res.getMenus()!=null)
 				LOG.debug(res.getMenus().toString());
 			
-			if(controller!=null) {
-				controller[0] = loader.getController();
-			}			
-			
-			return res;
+			return loader.getController();
 			
 		}catch (ClassCastException e1) {
 			e1.printStackTrace();
@@ -110,5 +108,33 @@ public class ComponentLoader {
 		}			
 	}
 	
-	
+	public Object loadDialog(final String name, final DialogPane dp/*, final List<ButtonType> btns*/) {
+		final String fulltemplatepath = fx_prefix+"/dialog/"+name+fx_suffix;		
+		
+		FXMLLoader loader = new FXMLLoader();
+		
+		/* configuro la vista */
+		final URL templateurl = getClass().getResource(fulltemplatepath);
+		
+		if(templateurl==null) {
+			LOG.error("error registrando componente "+name+", no se ha encontrado clase a cargar "+fulltemplatepath);
+		}else {
+			loader.setLocation(templateurl);
+		}		
+		
+		LOG.info(templateurl.toString());
+				
+		/* cargo el componente y añado la hoja de css */
+		try {
+			
+			loader.setRoot(dp);
+			
+			loader.load();
+						
+			return loader.getController();
+		}catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}			
+	}
 }

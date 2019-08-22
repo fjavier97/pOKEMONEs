@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import customfx.scene.control.*?>
+<?import javafx.util.Pair?>
+<?import java.util.LinkedList?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+
+<fx:root type="javafx.scene.control.DialogPane" fx:controller="com.pokemon.pokemones.controller.ImportDialogController"
+	xmlns="https://javafx.com/javafx/8"
+	xmlns:fx="https://javafx.com/fxml">
+	
+	<buttonTypes>
+		<ButtonType fx:constant="OK"/>
+		<ButtonType fx:constant="CANCEL"/>
+	</buttonTypes>
+	
+	<content>
+		<BorderPane prefHeight="300" prefWidth="500">
+			<top>
+				<Label text="select an option"/>
+			</top>
+			<center>
+				<TabPane fx:id="options">
+					<Tab fx:id="script" text="input" closable="FALSE">
+						<TextArea fx:id="textarea" promptText="paste here the data to import"/>
+					</Tab>
+					<Tab fx:id="file" text="file" closable="FALSE">
+						<HBox >
+							<Button text="select a file to import" onAction="#chooseFile"/>
+							<TextField fx:id="fileview" editable="FALSE" HBox.hgrow="ALWAYS"/>
+						</HBox>
+					</Tab>
+				</TabPane>
+			</center>
+		</BorderPane>
+	</content>
+	
+	
+</fx:root>
