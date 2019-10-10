@@ -78,3 +78,7 @@
     -fx-padding: 0;
 }
 */
+
+.list-cell{
+	-fx-padding: 0;
+}

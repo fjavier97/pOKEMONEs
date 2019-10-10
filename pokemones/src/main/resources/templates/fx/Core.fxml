@@ -15,11 +15,19 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.ListView?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.controller.CoreController"
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.controller.component.CoreController"
 	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
 	<menus>
 		<LinkedList>
-			<MenuDefinition text="prueba" path="/opciones/pruebas"/>
+			<Menu fx:id="Configuracion" text="configuracion">
+				<Menu fx:id="idioma" text="idioma">
+					<fx:define>
+        				<ToggleGroup fx:id="toggle_idioma"/>
+    				</fx:define>
+					<RadioMenuItem fx:id="en" text="english" toggleGroup="$toggle_idioma"/>
+					<RadioMenuItem fx:id="es" text="español" toggleGroup="$toggle_idioma" selected="TRUE"/>
+				</Menu>
+			</Menu>
 		</LinkedList>
 	</menus>
 	<content>

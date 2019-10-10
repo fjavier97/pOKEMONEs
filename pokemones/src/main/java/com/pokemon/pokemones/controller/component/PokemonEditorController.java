@@ -1,4 +1,4 @@
-package com.pokemon.pokemones.controller;
+package com.pokemon.pokemones.controller.component;
 
 import java.util.Map;
 
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.pokemon.pokemones.core.Navigation;
-import com.pokemon.pokemones.core.controller.AbstractController;
+import com.pokemon.pokemones.core.controller.component.AbstractController;
 import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
 
 import javafx.fxml.FXML;
@@ -21,9 +21,12 @@ public class PokemonEditorController extends AbstractController{
 	}
 	
 	@Override
-	public void injectArguments(Map<String, Object> args) {
+	public void handleParams(Map<String, Object> args) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public @Override void refreshData() {	
 	}
 
 }

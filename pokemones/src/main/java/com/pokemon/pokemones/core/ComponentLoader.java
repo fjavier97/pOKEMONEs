@@ -10,15 +10,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import com.pokemon.pokemones.core.controller.AbstractController;
+import com.pokemon.pokemones.core.controller.component.AbstractController;
+import com.pokemon.pokemones.core.controller.dialog.AbstractDialogController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.DialogPane;
+import javafx.scene.paint.Color;
 
 
-@Component
+@Service
 public class ComponentLoader {
 	
 	private final Logger LOG;
@@ -80,6 +82,11 @@ public class ComponentLoader {
 			
 			loader.load();
 			
+			/*inyecto los argumentos, el contralodor seencarga de gestionar su estado */
+			((AbstractController)loader.getController()).handleParams(params);
+			((AbstractController)loader.getController()).refreshLabels();
+			
+			/* estilos */
 			final URL cssurl = getClass().getResource(csspath);
 			if(cssurl==null){
 				LOG.info("no se ha encontrado hoja de estilos asociada con el componente"+name+"");
@@ -88,8 +95,15 @@ public class ComponentLoader {
 					res.getContent().getStylesheets().add(csspath);
 				}
 			}
-			/*inyecto los argumentos, el contralodor seencarga de gestionar su estado */
-			((AbstractController)loader.getController()).injectArguments(params);
+			/* TODO comprobar esto mejor */
+			try {
+				if(res.getContent().getBackground().getFills().get(0).getFill().equals(Color.TRANSPARENT)) {
+					res.getContent().setStyle("-fx-background-color: gray");
+				}
+			}
+			catch (NullPointerException ne) {
+				res.getContent().setStyle("-fx-background-color: gray");
+			}		
 			
 			/* para debug imprimimos estado del componente */
 			LOG.debug(res.toString());
@@ -97,7 +111,8 @@ public class ComponentLoader {
 				LOG.debug(res.getContent().toString());
 			if(res.getMenus()!=null)
 				LOG.debug(res.getMenus().toString());
-			
+						
+			/* devuelvo el controlador */
 			return loader.getController();
 			
 		}catch (ClassCastException e1) {
@@ -108,7 +123,7 @@ public class ComponentLoader {
 		}			
 	}
 	
-	public Object loadDialog(final String name, final DialogPane dp/*, final List<ButtonType> btns*/) {
+	public  AbstractDialogController<?> loadDialog(final String name, final DialogPane dp) {
 		final String fulltemplatepath = fx_prefix+"/dialog/"+name+fx_suffix;		
 		
 		FXMLLoader loader = new FXMLLoader();
@@ -123,6 +138,9 @@ public class ComponentLoader {
 		}		
 		
 		LOG.info(templateurl.toString());
+		
+		/* configuro controlador */
+		loader.setControllerFactory(ctx::getBean);
 				
 		/* cargo el componente y añado la hoja de css */
 		try {
@@ -130,7 +148,9 @@ public class ComponentLoader {
 			loader.setRoot(dp);
 			
 			loader.load();
-						
+			
+			((AbstractDialogController<?>)loader.getController()).setOwner(dp.getScene().getWindow());	
+			
 			return loader.getController();
 		}catch (IOException e) {
 			e.printStackTrace();

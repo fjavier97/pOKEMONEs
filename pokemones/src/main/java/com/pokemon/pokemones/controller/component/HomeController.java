@@ -1,4 +1,4 @@
-package com.pokemon.pokemones.controller;
+package com.pokemon.pokemones.controller.component;
 
 import java.net.URL;
 import java.util.ResourceBundle;

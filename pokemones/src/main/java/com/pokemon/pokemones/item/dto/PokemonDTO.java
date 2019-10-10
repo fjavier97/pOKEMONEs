@@ -7,7 +7,7 @@ import com.pokemon.pokemones.item.enums.Tipo;
 import com.pokemon.pokemones.item.pk.PokemonPK;
 
 @Entity
-@Table(name="POKEMON",schema="MYDB")
+@Table(name="POKEMON")
 @IdClass(PokemonPK.class)
 public class PokemonDTO {
 

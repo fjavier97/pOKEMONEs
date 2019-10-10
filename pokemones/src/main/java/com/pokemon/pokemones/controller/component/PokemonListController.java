@@ -1,70 +1,61 @@
-package com.pokemon.pokemones.controller;
+package com.pokemon.pokemones.controller.component;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import com.pokemon.pokemones.core.locals.Lacalized;
+import com.pokemon.pokemones.core.services.DialogService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.pokemon.pokemones.core.Navigation;
-import com.pokemon.pokemones.core.controller.AbstractController;
+import com.pokemon.pokemones.core.controller.component.PagedTableAbstractController;
 import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
 import com.pokemon.pokemones.item.dto.PokemonDTO;
 import com.pokemon.pokemones.repository.PokemonDAO;
-import com.pokemon.pokemones.service.PokemonImportService;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Pagination;
-import javafx.scene.control.TableView;
-import net.bytebuddy.utility.privilege.GetSystemPropertyAction;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
 
 @Component("PokemonList")
 @Scope("ComponentScope")
-public class PokemonListController extends AbstractController{
-
-	private int current_index;
-	private int elements_per_page;
+public class PokemonListController extends PagedTableAbstractController<PokemonDTO>{	
 	
-	private final PokemonImportService importService;
+	private @Lacalized @FXML TableColumn<PokemonDTO, ?> cabecera_texto;
+	private @Lacalized @FXML TableColumn<PokemonDTO, ?> cabecera_numero;
+	private @Lacalized @FXML TableColumn<PokemonDTO, ?> cabecera_tipos;
+	private @Lacalized @FXML TableColumn<PokemonDTO, ?> cabecera_stats;
+	
+	private @Lacalized @FXML MenuItem crear;
+	private @Lacalized @FXML MenuItem modificar;
+	private @Lacalized @FXML MenuItem eliminar;
+	private @Lacalized @FXML MenuItem ver;
+	private @Lacalized @FXML MenuItem importar;
+	private @Lacalized @FXML Menu editar;
+	private @Lacalized @FXML Menu archivo;
+	
+	private final DialogService dialogService;
 	
 	private final PokemonDAO pokemonDAO;
 	
-	private @FXML Pagination paginator;
-	
-	private @FXML TableView<PokemonDTO> tableview;
-	
-	public @Autowired PokemonListController(final PokemonDAO pokemonDAO, final PokemonImportService importService) {
+	public @Autowired PokemonListController(final PokemonDAO pokemonDAO, final DialogService dialogService) {
 		super();
 		this.pokemonDAO = pokemonDAO;
-		this.importService = importService;
-		current_index=0;
+		this.dialogService = dialogService;
 	}
 	
-	private void setElementsperPage(final int elements_per_page) {
-		this.elements_per_page=elements_per_page;
-	}
-	
-	/**
-	 * metodo encargado de rellenar la tabla en funcion de los datos de la pagina
-	 * @param i, indice
-	 * @return tabla
-	 */
-	private Node navigate(final int i){
-		// cambiar items de la tabla
-		tableview.getItems().clear();
-		final List<PokemonDTO> res = pokemonDAO.findAll(PageRequest.of(i, elements_per_page, Sort.by("pokedexNo"))).getContent();
-		tableview.getItems().addAll(res);
-		// devolver la vista
-		current_index=i;
-		return tableview;
+	protected @Override Page<PokemonDTO> getPage(final int i){
+		return pokemonDAO.findAll(PageRequest.of(i, elements_per_page, Sort.by("pokedexNo"))); 
 	}
 
 	/*######################################################################################*/
@@ -82,7 +73,7 @@ public class PokemonListController extends AbstractController{
 		System.out.println("modificar");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("item",tableview.getSelectionModel().getSelectedItem());
-		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("PokemonEditor", Navigation.FORWARD, map);
+//		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("PokemonEditor", Navigation.FORWARD, map);
 //		publisher.publishEvent(evt);
 	}
 	
@@ -115,10 +106,8 @@ public class PokemonListController extends AbstractController{
 	}
 	
 	private @FXML void importar() {
-		importService.show();
-
-		navigate(paginator.getCurrentPageIndex());
-	}
+		dialogService.prompt("importDialog");
+	}	
 	
 	private @FXML void ver() {
 		
@@ -139,11 +128,10 @@ public class PokemonListController extends AbstractController{
 	/*###								 initialize 									####*/
 	/*######################################################################################*/
 	
-	public @Override void injectArguments(Map<String, Object> args) {
-		final Integer pageindex = (args.containsKey("index")?(Integer)args.get("index"):current_index);
-		setElementsperPage(3);//TODO cambiar esto a bien
-		paginator.setCurrentPageIndex(pageindex);
-		paginator.setPageFactory(this::navigate);
+	public @Override void handleParams(Map<String, Object> args) {
+		super.handleParams(args);		
 	}
+
+
 
 }

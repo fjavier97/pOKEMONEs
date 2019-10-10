@@ -5,25 +5,28 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import com.pokemon.pokemones.core.controller.CoreController;
+import com.pokemon.pokemones.core.controller.component.AbstractController;
+import com.pokemon.pokemones.core.controller.component.CoreController;
+import com.pokemon.pokemones.core.event.ComponentDataRefreshEvent;
+import com.pokemon.pokemones.core.event.ComponentViewRefreshEvent;
 import com.pokemon.pokemones.core.event.ComponenteChangeCommitEvent;
 import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.LanguajeChangeEvent;
+import com.pokemon.pokemones.core.event.NotificationEvent;
+import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
 import com.pokemon.pokemones.core.event.StartEvent;
-import com.pokemon.pokemones.scopes.ComponentScope;
+import com.pokemon.pokemones.core.scopes.ComponentScope;
 
-import customfx.scene.control.MenuCretionException;
-import customfx.scene.control.MenuDefinition;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-@Component
+@Service
 public class ComponentManager {
 
 	private final Logger LOG;
@@ -35,14 +38,16 @@ public class ComponentManager {
 	private final ComponentLoader loader;	
 	
 	private String current_component_name;
-	//private AbstractComponent currentComponentController;
+	private AbstractController currentComponentController;
 	
+	private final ApplicationEventPublisher publisher;
 	
-	public @Autowired ComponentManager(ComponentLoader loader, ComponentScope scope) {
+	public @Autowired ComponentManager(ComponentLoader loader, ComponentScope scope, ApplicationEventPublisher publisher) {
 		super();
 		this.LOG=LoggerFactory.getLogger(ComponentManager.class);
 		this.loader=loader;
 		this.scope=scope;
+		this.publisher = publisher;
 	}
 	
 	private void changeComponent(final String nombreNuevoComponente, final boolean borrarAnterior) {
@@ -67,19 +72,18 @@ public class ComponentManager {
 		
 		final Scene scene = new Scene(core_component.getContent());
 		if(core_component.hasMenu()) {
-			for(MenuDefinition md: core_component.getMenus()) {
-				try {
-					coreComponentController.getMenus().addSystemMenu(md);
-				} catch (MenuCretionException e) {
-					LOG.error("no se pudo crear el menu ["+md.getText()+"] :"+md.getPath());
-				}
-			}
+			coreComponentController.getMenus().addCoreMenus(core_component.getMenus());
+
 		}
 		getStage().setScene(scene);
 	}
 		
 	private @EventListener void onStop(ContextClosedEvent evt){
 		scope.removeAll();
+	}
+	
+	private @EventListener void onLanguajeChanged(LanguajeChangeEvent evt) {
+		currentComponentController.refreshLabels();
 	}
 	
 	private @EventListener ComponenteChangeRequestEvent onStart(StartEvent evt){
@@ -95,38 +99,47 @@ public class ComponentManager {
 		return new ComponenteChangeRequestEvent("Prueba1");
 	}
 	
-	private @EventListener ComponenteChangeCommitEvent onComponentChangeRequest(ComponenteChangeRequestEvent evt){
+	private @EventListener void onComponentChangeRequest(ComponenteChangeRequestEvent evt){
 		LOG.info("se solicito el cambio al componente "+evt.getNewComponent());
 		
 		/* compruebo que no este ya cargado */
 		if(evt.getNewComponent().equals(current_component_name)) {
 			LOG.info("componente solicitado ya esta cargado actualmente");
-			return null;
+			return ;
 		}
 
 		/* compruebo que el corecontroller no este a mitad de transicion */
 		if(coreComponentController!= null && coreComponentController.isAnimationRunning()) {
 			LOG.info("espera a acabar la animacion");
-			return null;
+			return ;
 		}
 		// Cargo el componente
 		LOG.info("cargando componente solicitado");
 		try{
 			/* construyo y paso el estado*/
 			final Componente component = new Componente();
-			loader.load(evt.getNewComponent(), component, evt.getParams());
+			this.currentComponentController = loader.load(evt.getNewComponent(), component, evt.getParams());
 						
 			/* cambio estado */
 			changeComponent(evt.getNewComponent(), evt.getNavigation()!=Navigation.FORWARD);
 			
+			
 			/* mando evento a coreController para que cambie su estado */
-			return new ComponenteChangeCommitEvent(component,evt.getNavigation());
+			this.coreComponentController.onComponentChangeCommitEvent(new ComponenteChangeCommitEvent(component,evt.getNavigation()),false);
+			return ;
 		}catch (Exception e) {
 			LOG.error("no se ha podido cargar la clase "+evt.getNewComponent(),e);
-			return null;//TODO popup
+			publisher.publishEvent(new NotificationEvent("no se ha podido cargar la clase "+evt.getNewComponent(), Threat.ERROR));
+			return ;
 		}
 	}
 	
+	private @EventListener void onComponentDataRefresh(ComponentDataRefreshEvent evt){
+		LOG.info("referscando datos");
+		currentComponentController.refreshData();
+	}
 	
-	
+	private @EventListener void onComponentViewRefresh(ComponentViewRefreshEvent evt){
+		// TODO cargar la vista otra vez
+	}
 }

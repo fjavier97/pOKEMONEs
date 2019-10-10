@@ -1,56 +1,32 @@
 package com.pokemon.pokemones.core.services;
 
-import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
-import com.pokemon.pokemones.controller.ImportDialogController;
 import com.pokemon.pokemones.core.ComponentLoader;
+import com.pokemon.pokemones.core.ComponentManager;
+import com.pokemon.pokemones.core.DialogAction;
 
-import javafx.application.Platform;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.util.Callback;
-
-
-public class DialogService<E> {
-
-	private Dialog<E> dialog;
+@Service
+public class DialogService{
 	
-	protected final Logger LOG;	
+	private final ComponentLoader loader;
+	private final ApplicationContext ctx;
+	private final ComponentManager manager;
 	
-	private ComponentLoader loader;
-	
-	public @Autowired void setLoader(ComponentLoader loader) {
-		this.loader = loader;
-	}
-
-	protected @Autowired DialogService() {
-		LOG = LoggerFactory.getLogger(DialogService.class);		
+	public @Autowired DialogService(final ComponentLoader loader, final ComponentManager manager, final ApplicationContext ctx){
+		this.loader=loader;
+		this.ctx = ctx;
+		this.manager = manager;
 	}
 	
-	protected Object loadView(final String view) throws Exception{
-		if(isShowing()) {/* si ya esta activo, pasando que va a ser el mismo */
-			throw new Exception();
-		}
-		dialog = new Dialog<>();
-		return loader.loadDialog(view, dialog.getDialogPane());
+	public <E> void prompt(final String name){
+		DialogAction<E> actiondialog = (DialogAction<E>)ctx.getBean(DialogAction.class, loader, manager, name);
+		/*este filtro hace que si devuelve un null, el handler no se ejecute*/
+		final Predicate<E> filter = r -> r!=null;
+		actiondialog.getDialog().showAndWait().filter(filter).ifPresent(actiondialog.getController());
 	}
-	
-	public boolean isShowing() {
-		return this.dialog!=null;
-	}
-	
-	protected void show( final Callback<ButtonType, E> rc, final Consumer<E> handler) {
-		if(!isShowing()) {/* si ya esta activo, pasando que va a ser el mismo */
-			return;
-		}		
-		dialog.setResultConverter(rc);
-		dialog.showAndWait().ifPresent(e -> handler.accept(e));
-		dialog = null;
-		Platform.runLater(System::gc);
-	}
-	
 }

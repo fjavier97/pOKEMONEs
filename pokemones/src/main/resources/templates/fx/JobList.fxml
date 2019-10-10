@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import customfx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.Group?>
+<?import java.lang.Integer?>
+<?import java.util.LinkedList?>
+<?import java.util.LinkedList?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.cell.ProgressBarTableCell?>
+
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.controller.component.JobListController"
+	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
+	<menus>
+		<LinkedList>
+			
+		</LinkedList>
+	</menus>
+	<content>
+		<BorderPane fx:id="root">
+			<center>
+				<TableView fx:id="jobsView">
+					<columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+					<columns>
+						<TableColumn text="nombre"  prefWidth="500">
+							<cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+						</TableColumn>
+						<TableColumn text="id de thread" prefWidth="50">
+							<cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+						</TableColumn>
+						<TableColumn text="progreso">
+							<cellValueFactory><PropertyValueFactory property="progress"/></cellValueFactory>
+							<cellFactory><ProgressBarTableCell fx:factory="forTableColumn"/></cellFactory>
+						</TableColumn>											
+					</columns>
+				</TableView>			
+			</center>
+		</BorderPane>
+	</content>
+</fx:root>
+

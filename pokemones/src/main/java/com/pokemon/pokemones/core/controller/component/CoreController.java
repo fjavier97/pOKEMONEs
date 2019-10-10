@@ -1,18 +1,12 @@
-package com.pokemon.pokemones.core.controller;
+package com.pokemon.pokemones.core.controller.component;
 
-import java.net.URL;
 import java.util.Map;
-import java.util.ResourceBundle;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.pokemon.pokemones.core.ComponentManager;
 import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.event.ComponenteChangeCommitEvent;
 import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
@@ -24,27 +18,39 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.util.Duration;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import customfx.scene.control.ConfigurableMenuBar;
-import customfx.scene.control.MenuCretionException;
-import customfx.scene.control.MenuDefinition;
 import customfx.scene.control.TreeMenu;
 
 @Component("Core")
 @Scope("ComponentScope")
 public class CoreController extends AbstractController {
 		
+	private ChangeListener<? super Toggle> languajeChangeListener = (o,a,n)->{
+				if(n!=null) {
+					super.localization_service.changeLanguaje(((RadioMenuItem)n).getId());
+				}};
+	
 	private @FXML ListView<Node> notificationarea;
 			
 	/* referencias a la vista */
@@ -70,6 +76,8 @@ public class CoreController extends AbstractController {
 	public @Autowired CoreController() {
 		super();
 	}
+	
+	private @FXML ToggleGroup toggle_idioma;
 	
 	/****
 	 * metodos para ocultar el menu
@@ -109,85 +117,110 @@ public class CoreController extends AbstractController {
 		return isplaying;
 	}
 	
-	public void setContentComponent(final ComponenteChangeCommitEvent evt) {
-						
-		if(this.content.getChildren().size()==0) {
+	public @EventListener void onNotificationEvent(final NotificationEvent evt) {
+		BorderPane not = new BorderPane();
+		HBox hbox = new HBox();
+		
+		Label label = new Label(evt.getMessage());
+		Button btn = new Button("X");
+		btn.setOnAction(e->notificationarea.getItems().remove(not));
+		hbox.getChildren().addAll(label,btn);
+		hbox.setMaxWidth(Double.MAX_VALUE);
+		label.setMaxWidth(Double.MAX_VALUE);
+		HBox.setHgrow(label, Priority.ALWAYS);
+
+		not.setTop(hbox);
+		label.setAlignment(Pos.CENTER);
+
+		if(evt.getNode()!=null) {
+			evt.getNode().setMaxWidth(Double.MAX_VALUE);
+			not.setCenter(evt.getNode());
+		}
+		
+		Color color;
+		switch (evt.getThreat()) {
+			case ERROR:
+				color = Color.RED;
+				break;	
+			case SUCCESS:
+				color=Color.GREEN;
+				break;
+			case WARNING:
+				color= Color.YELLOW;
+				break;
+			default:
+				color= Color.BLUE;
+				break;
+		}
+		not.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, new Insets(0))));
+		
+		notificationarea.getItems().add(not);
+	}
+	
+ 	public void onComponentChangeCommitEvent(final ComponenteChangeCommitEvent evt, final boolean animate) {
+ 		/* añado las nuevas opciones a la barra de menus */
+ 		this.menus.setMenus(evt.getComponente().getMenus());
+ 		
+ 		/* si no hay animacion */
+ 		/* TODO si no habia nada, simplemente no hacer sus animaciones */
+ 		if(!animate /*|| this.content.getChildren().size()==0*/) {
+ 			this.content.getChildren().clear();
 			this.content.getChildren().add(evt.getComponente().getContent());
 			return;
 		}
+		else {		
+			final BorderPane anterior = this.content.getChildren().isEmpty()?null:(BorderPane)this.content.getChildren().get(0);
+			
+			final BorderPane nuevo = (BorderPane)evt.getComponente().getContent();
+			
+			KeyValue keyvalue = null;
+			
+			switch(evt.getNavigation()) {
+				case FORWARD:
 	
-	
-		final BorderPane anterior = (BorderPane)this.content.getChildren().get(0);
-		
-		final BorderPane nuevo = (BorderPane)evt.getComponente().getContent();
-		
-		KeyValue keyvalue = null;
-		
-		switch(evt.getNavigation()) {
-			case FORWARD:
-
-				nuevo.setTranslateX(-content.getWidth());
-				
-				content.getChildren().add(1, nuevo);
-				
-				keyvalue = new KeyValue(nuevo.translateXProperty(),0);
-
-				break;
-				
-			case BACKWARD:
-				
-				content.getChildren().add(0, nuevo);
-				
-				keyvalue = new KeyValue(anterior.translateXProperty(),-content.getWidth());
-
-				break;
-				
-			default:
+					nuevo.setTranslateX(-content.getWidth());
 					
-				nuevo.setTranslateY(-content.getHeight());
-				
-				content.getChildren().add(1, nuevo);
-				
-				keyvalue = new KeyValue(nuevo.translateYProperty(),0, Interpolator.EASE_IN);
-
+					content.getChildren().add(1, nuevo);
+					
+					keyvalue = new KeyValue(nuevo.translateXProperty(),0);
+	
+					break;
+					
+				case BACKWARD:
+					
+					content.getChildren().add(0, nuevo);
+					
+					if(anterior!=null) 
+						keyvalue = new KeyValue(anterior.translateXProperty(),-content.getWidth());
+	
+					break;
+					
+				default:
+						
+					nuevo.setTranslateY(-content.getHeight());
+					
+					content.getChildren().add(anterior==null?0:1, nuevo);
+					
+					keyvalue = new KeyValue(nuevo.translateYProperty(),0, Interpolator.EASE_IN);
+	
+			}
+			
+			final KeyFrame keyFrame = new KeyFrame(Duration.millis(100), keyvalue);
+			
+			final Timeline animation = new Timeline(keyFrame);
+			
+			animation.setOnFinished(e->{
+				if(anterior!=null)
+					content.getChildren().remove(anterior);
+				System.out.println("fin animacion"+Thread.currentThread().getId());
+				Platform.runLater(()->isplaying=false); 
+			});
+			
+			isplaying=true;
+			animation.play();
+			System.out.println("inicio animacion"+Thread.currentThread().getId());
+			
 		}
-		
-		final KeyFrame keyFrame = new KeyFrame(Duration.millis(350), keyvalue);
-		
-		final Timeline animation = new Timeline(keyFrame);
-		
-		animation.setOnFinished(e->{
-			content.getChildren().remove(anterior);
-			Platform.runLater(()->isplaying=false); 
-		});
-		
-		isplaying=true;
-		animation.play();	
-		
-	}
-	
-	private void setMenus(final ComponenteChangeCommitEvent evt) {
-		this.menus.clean();
-		if(evt.getComponente().hasMenu()) {	
-			for(MenuDefinition m : evt.getComponente().getMenus()) {
-				try {
-					this.menus.addMenu(m);
-				}catch(MenuCretionException mce) {
-					LOG.error("no se pudo registrar el menu ["+m.getText()+"] :"+m.getPath());
-				}
-			}			
-		}
-	}
-	
-	public @EventListener void onNotificationEvent(final NotificationEvent evt) {
-		Label label = new Label(evt.getMessage());
-		notificationarea.getItems().add(label);
-//		label.setBackground(Color.ALICEBLUE);
-	}
-	
- 	public @EventListener void onComponentChangeCommitEvent(final ComponenteChangeCommitEvent evt) {
-		setContentComponent(evt);
-		setMenus(evt);
 	}
 	
 	/****
@@ -196,7 +229,11 @@ public class CoreController extends AbstractController {
 	
 
 	@Override
-	public void injectArguments(Map<String, Object> args) {
+	public void handleParams(Map<String, Object> args) {
+		
+		/* no se puede comprobar si ya esta, asi que por si acaso lo quito antes y lo vuelvo a registrar */
+		toggle_idioma.selectedToggleProperty().removeListener(this.languajeChangeListener);
+		toggle_idioma.selectedToggleProperty().addListener(this.languajeChangeListener);
 		
 		sp.widthProperty().addListener((ob, o, n) -> {
 			if (o.doubleValue() > n.doubleValue())// si pasa a estar pequeña
@@ -234,10 +271,16 @@ public class CoreController extends AbstractController {
 		tree.addEntry("/pruebas", "prueba1", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba1",Navigation.FORWARD)));
 		tree.addEntry("/pruebas", "prueba2", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba2",Navigation.BACKWARD)));
 		tree.addEntry("/pruebas", "pokemon", e->publisher.publishEvent(new ComponenteChangeRequestEvent("PokemonList",Navigation.LINK)));
-		
+		tree.addEntry("/sistema/procesos", "running jobs", e->publisher.publishEvent(new ComponenteChangeRequestEvent("JobList",Navigation.LINK)));
+		tree.addEntry("/sistema/procesos", "job definitions", e->publisher.publishEvent(new ComponenteChangeRequestEvent("JobClassList",Navigation.LINK)));
+		tree.addEntry("/sistema/procesos", "job history", e->publisher.publishEvent(new ComponenteChangeRequestEvent("JobHistory",Navigation.LINK)));
+		tree.addEntry("/sistema/procesos", "scheduled jobs", e->{});
 		publisher.publishEvent(new NotificationEvent("aplicacion iniciada",Threat.INFO));
 		
 		
+	}
+
+	public @Override void refreshData() {	
 	}
 
 }

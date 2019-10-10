@@ -1,4 +1,4 @@
-package com.pokemon.pokemones.service;
+package com.pokemon.pokemones.job;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,20 +6,26 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pokemon.pokemones.core.event.ComponentDataRefreshEvent;
+import com.pokemon.pokemones.core.event.ComponentViewRefreshEvent;
+import com.pokemon.pokemones.core.job.AbstractJobPerformable;
+import com.pokemon.pokemones.core.job.JobPerformable;
 import com.pokemon.pokemones.item.dto.PokemonDTO;
 import com.pokemon.pokemones.item.enums.Tipo;
 import com.pokemon.pokemones.repository.PokemonDAO;
 
-@Service
-public class PokemonCsvImportService {
+@JobPerformable
+public class PokemonCsvImportJob extends AbstractJobPerformable<Void>{
 
 	private final Logger LOG;	
 
@@ -38,37 +44,58 @@ public class PokemonCsvImportService {
 	private final static int _HEADERS = 11;
 
 	private final PokemonDAO repository;
+	
+	private Reader reader;	
 
-	public @Autowired PokemonCsvImportService(final PokemonDAO repository){
+	public @Autowired PokemonCsvImportJob(final PokemonDAO repository){
+		super();
 		this.repository = repository;
-		LOG = LoggerFactory.getLogger(PokemonCsvImportService.class);
+		LOG = LoggerFactory.getLogger(PokemonCsvImportJob.class);
 	}
 
-	public void performImport(final BufferedReader reader) throws IOException{
+	@Override
+	public void setParams(Map<String, Object> params) {
+		this.reader = (Reader)params.get("reader");
+	}
+	
+	public Void perform() throws Exception{
 
-		//try(final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))){
+		try (final BufferedReader reader = new BufferedReader(this.reader)){				
+			
 			final String[] headers = reader.readLine().split(";");
 			final Integer[] hi = getHeaderIndexes(headers);
-
-			final List<PokemonDTO> reslist = new LinkedList<>();
-
+			
+			//primero leo todo el archivo para poder llevar el estado
+			final List<String> lineas = new LinkedList<String>();
+			for(String linea = null;(linea=reader.readLine())!=null;) {
+				lineas.add(linea);
+			}
+	
 			/* itero sobre los datos */
 			/* por cada campo comprobar:
 			 * 	-que esta declarada la columna en la cabecera
 			 * 	-que el campo no este vacio
 			 * 	-si es numerico o enumerado que se pueda parsear coreectamente 
-			 * 	+si no esta declarado o esta vacio, se ignorael campo pero se procesa la linea, si hay error no se procesarála linea*/
-			String line = null;
-			int k = 1;
-			for(;(line=reader.readLine())!=null;k++) {
+			 * 	+si no esta declarado o esta vacio, se ignorael campo pero se procesa la linea, si hay error no se procesarála linea*/	
+			for(int k = 0;k<lineas.size();k++) {
+	
+				final String line = lineas.get(k);
 
+				if(line.isEmpty()) {/* esta comprobacion no tiene mucho sentido, porque las lineas vacias son [;;;;;;;;....], pero por si acaso*/
+					continue;
+				}
+				
 				final String[] data = line.split(";");
-
+				
+				if(data.length==0) {/* si la linea no tiene datos (es decir[;;;;;;;;....]), la longitud de los datos es 0*/
+					continue;
+				}
+				
 				final String nombre;
 				final int pokedex_no;
 				final String forma;
-
-				if(hi[POKEDEX_NO]!=null || !data[hi[POKEDEX_NO]].isEmpty()){
+	
+				if(hi[POKEDEX_NO]!=null && !data[hi[POKEDEX_NO]].isEmpty()){
 					try {
 						pokedex_no=Integer.parseInt(data[hi[POKEDEX_NO]]);
 					}catch (NumberFormatException e) {
@@ -79,23 +106,23 @@ public class PokemonCsvImportService {
 					LOG.warn("no se pudo manejar la entrada "+k+", el atributo obligatorio POKEDEX_NO no se ha encontrado");
 					continue;
 				}
-
-				if(hi[FORMA]!=null || !data[hi[FORMA]].isEmpty()){
+	
+				if(hi[FORMA]!=null && !data[hi[FORMA]].isEmpty()){
 					forma=data[hi[FORMA]];
 				}else {
 					LOG.warn("no se pudo manejar la entrada "+k+", el atributo obligatorio FORMA no se ha encontrado");
 					continue;
 				}
-
-				if(hi[NOMBRE]!=null || !data[hi[NOMBRE]].isEmpty()){
+	
+				if(hi[NOMBRE]!=null && !data[hi[NOMBRE]].isEmpty()){
 					nombre=data[hi[NOMBRE]];
 				}else {
 					LOG.warn("no se pudo manejar la entrada "+k+", el atributo obligatorio NOMBRE no se ha encontrado");
 					continue;
 				}
-
+	
 				final PokemonDTO res = new PokemonDTO(pokedex_no, forma, nombre);
-
+	
 				if(hi[TIPO1]!=null && !data[hi[TIPO1]].isEmpty()) {
 					try {
 						res.setTipo1(Tipo.valueOf(data[hi[TIPO1]].toUpperCase()));
@@ -160,13 +187,21 @@ public class PokemonCsvImportService {
 						continue;
 					}
 				}
-
-				reslist.add(res);
+	
+				repository.save(res);
+				updateProgress(k+1, k);
 			}
-
-			repository.saveAll(reslist);
+		}catch(Exception ex) {
+			LOG.error("error",ex);
+			throw ex;
+		}
+		return null;
 	}
 
+	protected @Override void succeeded(){
+		publisher.publishEvent(new ComponentDataRefreshEvent());
+	}
+	
 	private Integer[] getHeaderIndexes(final String[] headers) {
 		final Integer[] res = new Integer[_HEADERS];
 		int k = 0;
@@ -254,5 +289,8 @@ public class PokemonCsvImportService {
 
 		return res;
 	}
+
+
+
 
 }

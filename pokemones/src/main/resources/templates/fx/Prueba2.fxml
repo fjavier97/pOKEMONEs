@@ -8,12 +8,14 @@
 <?import java.util.LinkedList?>
 
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.Prueba2Controller"
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.component.Prueba2Controller"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>
 		<LinkedList>
-			<MenuDefinition text="preuba" path="/archivo/pruebas" onAction="#prueba2"/>
+			<Menu fx:id="M" text="archivo">
+				<MenuItem fx:id="M2" text="prueba" onAction="#prueba2"/>
+			</Menu>
 		</LinkedList>
 	</menus>
 	<content>

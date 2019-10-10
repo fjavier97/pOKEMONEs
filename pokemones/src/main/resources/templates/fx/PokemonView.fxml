@@ -10,17 +10,22 @@
 <?import java.util.LinkedList?>
 <?import java.lang.String?>
 <?import customfx.scene.chart.StarChart?>
+<?import javafx.scene.layout.HBox?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.PokemonViewController"
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.component.PokemonViewController"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>
 		<LinkedList>
-			<MenuDefinition text="atras" path="/nevegacion" onAction="#atras"/>
 		</LinkedList>
 	</menus>
 	<content>
 		<BorderPane >
+			<top>
+				<HBox >
+					<Button fx:id="atras" text="atras" onAction="#atras"/>
+				</HBox>
+			</top>
 			<center>
 				<StarChart fx:id="grafico" maxValue="200" autoAdjustOverflow="false" areaColor="BLUE" gridAreaColor="WHITE"/>
 			</center>

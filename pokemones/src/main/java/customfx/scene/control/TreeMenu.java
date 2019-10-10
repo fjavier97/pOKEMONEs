@@ -35,8 +35,8 @@ public class TreeMenu extends TreeView<String> {
 			for(int k = 0; k < cursor.getChildren().size() && !encontrado ; k++) {
 				
 				/* si lo encuentro avanzo el cursor el */
-				if(cursor.getChildren().get(0).getValue().equals(r)) {
-					cursor=cursor.getChildren().get(0);
+				if(cursor.getChildren().get(k).getValue().equals(r)) {
+					cursor=cursor.getChildren().get(k);
 					encontrado=true;
 					break;
 				}
