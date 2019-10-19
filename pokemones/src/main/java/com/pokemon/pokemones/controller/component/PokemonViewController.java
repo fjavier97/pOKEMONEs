@@ -32,12 +32,12 @@ public class PokemonViewController extends AbstractController {
 	public @Autowired PokemonViewController() {
 		model = new SimpleObjectProperty<PokemonDTO>(null);
 		model.addListener((o, v, n) -> {
-			grafico.getData().add(new Data((double) n.getBase_HP(), "HP"));
-			grafico.getData().add(new Data((double) n.getBase_ATK(), "ATK"));
-			grafico.getData().add(new Data((double) n.getBase_SPA(), "SPA"));
-			grafico.getData().add(new Data((double) n.getBase_SPE(), "SPE"));
-			grafico.getData().add(new Data((double) n.getBase_DEF(), "DEF"));
-			grafico.getData().add(new Data((double) n.getBase_SPD(), "SPD"));
+			grafico.getData().add(new Data((double) n.getBaseHP(), "HP"));
+			grafico.getData().add(new Data((double) n.getBaseATK(), "ATK"));
+			grafico.getData().add(new Data((double) n.getBaseSPA(), "SPA"));
+			grafico.getData().add(new Data((double) n.getBaseSPE(), "SPE"));
+			grafico.getData().add(new Data((double) n.getBaseDEF(), "DEF"));
+			grafico.getData().add(new Data((double) n.getBaseSPD(), "SPD"));
 
 		});
 	}

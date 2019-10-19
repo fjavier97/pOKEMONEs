@@ -2,14 +2,14 @@ package com.pokemon.pokemones.core;
 
 import java.util.List;
 
-import customfx.scene.control.MenuDefinition;
 import javafx.scene.control.Menu;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 public class Componente {
 	
 	private List<Menu> menus;
-	private BorderPane content;
+	private Pane content;
 	
 	public Componente() {
 		this.content=null;
@@ -38,11 +38,11 @@ public class Componente {
 		return this.menus!=null;
 	}
 	
-	public BorderPane getContent() {
+	public Pane getContent() {
 		return content;
 	}
 
-	public void setContent(BorderPane content) {
+	public void setContent(Pane content) {
 		this.content = content;
 	}
 

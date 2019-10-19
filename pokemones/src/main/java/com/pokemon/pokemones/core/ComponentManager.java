@@ -128,7 +128,7 @@ public class ComponentManager {
 			this.coreComponentController.onComponentChangeCommitEvent(new ComponenteChangeCommitEvent(component,evt.getNavigation()),false);
 			return ;
 		}catch (Exception e) {
-			LOG.error("no se ha podido cargar la clase "+evt.getNewComponent(),e);
+			LOG.error("no se ha podido cargar la clase "+evt.getNewComponent(),e.getCause());
 			publisher.publishEvent(new NotificationEvent("no se ha podido cargar la clase "+evt.getNewComponent(), Threat.ERROR));
 			return ;
 		}

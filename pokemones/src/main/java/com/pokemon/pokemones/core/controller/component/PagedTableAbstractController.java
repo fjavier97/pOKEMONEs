@@ -18,6 +18,13 @@ import javafx.scene.text.Text;
 
 public abstract class PagedTableAbstractController<E> extends AbstractController {
 
+	/*
+		setPageCount() es el numero total de paginas
+		setMaxPageIndicatorCount() es el numero botones que aparecen abajo para ir a la otra pagina
+	 */
+	
+	
+	
 	protected int elements_per_page;
 	protected int current_index;
 
@@ -37,11 +44,13 @@ public abstract class PagedTableAbstractController<E> extends AbstractController
 	 * @return
 	 */
 	protected Node navigate(final int i) {
-		System.out.println("ir a "+i+",current index: "+current_index+":T="+Thread.currentThread().getId());
+		final int indice = i==-1?current_index:i;
+		System.out.println("ir a "+indice+",current index: "+current_index+":T="+Thread.currentThread().getId());
+		
 		//comprobar que la pagina no este fuera de rango si es conocido
-		final int max = paginator.getMaxPageIndicatorCount();
-		if(max!=Pagination.INDETERMINATE && i>=max) {
-			/* estono deberia salir porque el paginador muestra solo los indices con contenido pero por si acaso */
+		final int max = paginator.getPageCount();
+		if(max!=Pagination.INDETERMINATE && indice>=max) {
+			/* esto no deberia salir porque el paginador muestra solo los indices con contenido pero por si acaso */
 			LOG.info("page requested out of range");
 			tableview.setPlaceholder(new Text("page requested out of range"));
 			tableview.getItems().clear();
@@ -49,13 +58,18 @@ public abstract class PagedTableAbstractController<E> extends AbstractController
 		}	
 
 		// obtener elemetos nuevos
-		final Page<E> page = getPage(i);
+		final Page<E> page = getPage(indice);
 		final List<E> items = page.getContent();
 
 		// comprobar indices y maximo
-		current_index=i;
+		if(i!=-1) {
+			current_index=indice;
+		}
 		
-		paginator.setPageCount(page.getTotalPages());
+		if(paginator.getPageCount()!=page.getTotalPages()) {
+			paginator.setPageCount(page.getTotalPages());
+		}
+
 
 		// devolver la vista con los nuevos elementos
 		tableview.getItems().setAll(items);
@@ -73,16 +87,22 @@ public abstract class PagedTableAbstractController<E> extends AbstractController
 			current_index=(Integer)args.get("index");
 			System.out.println("contiene: "+(Integer)args.get("index"));
 		}
+		
+		paginator.setMaxPageIndicatorCount(7);
 		setElementsperPage(3);//TODO cambiar esto a bien
+		
 		if(paginator.getPageFactory()==null) {
 			paginator.setPageFactory(this::navigate);
 		}
+		
 		refreshData();
 	}	
 
 	public @Override void refreshData() {	
-		System.out.println("refrescando");
-		this.paginator.setCurrentPageIndex(current_index);
+		/* llamo a navigate porque si no al parecer suda polla de recargar la tabla si el indice ya es el mismo */
+		navigate(-1);
+		/* llamo a setcurrentindex porque si no al cambiar y volver del componente pilla el 0 */
+		paginator.setCurrentPageIndex(current_index);
 	}
 
 

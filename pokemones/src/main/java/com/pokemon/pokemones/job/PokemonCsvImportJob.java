@@ -22,7 +22,7 @@ import com.pokemon.pokemones.core.job.AbstractJobPerformable;
 import com.pokemon.pokemones.core.job.JobPerformable;
 import com.pokemon.pokemones.item.dto.PokemonDTO;
 import com.pokemon.pokemones.item.enums.Tipo;
-import com.pokemon.pokemones.repository.PokemonDAO;
+import com.pokemon.pokemones.repository.PokemonRepository;
 
 @JobPerformable
 public class PokemonCsvImportJob extends AbstractJobPerformable<Void>{
@@ -43,11 +43,11 @@ public class PokemonCsvImportJob extends AbstractJobPerformable<Void>{
 
 	private final static int _HEADERS = 11;
 
-	private final PokemonDAO repository;
+	private final PokemonRepository repository;
 	
 	private Reader reader;	
 
-	public @Autowired PokemonCsvImportJob(final PokemonDAO repository){
+	public @Autowired PokemonCsvImportJob(final PokemonRepository repository){
 		super();
 		this.repository = repository;
 		LOG = LoggerFactory.getLogger(PokemonCsvImportJob.class);
@@ -141,7 +141,7 @@ public class PokemonCsvImportJob extends AbstractJobPerformable<Void>{
 				}
 				if(hi[ATK]!=null && !data[hi[ATK]].isEmpty()) {
 					try {
-						res.setBase_ATK(Integer.parseInt(data[hi[ATK]]));
+						res.setBaseATK(Integer.parseInt(data[hi[ATK]]));
 					}catch (NumberFormatException e) {
 						LOG.warn("error procesando la entrada "+k+", atributo ATK no es numerico");
 						continue;
@@ -149,7 +149,7 @@ public class PokemonCsvImportJob extends AbstractJobPerformable<Void>{
 				}
 				if(hi[DEF]!=null && !data[hi[DEF]].isEmpty()) {
 					try {
-						res.setBase_DEF(Integer.parseInt(data[hi[DEF]]));
+						res.setBaseDEF(Integer.parseInt(data[hi[DEF]]));
 					}catch (NumberFormatException e) {
 						LOG.warn("error procesando la entrada "+k+", atributo DEF no es numerico");
 						continue;
@@ -157,7 +157,7 @@ public class PokemonCsvImportJob extends AbstractJobPerformable<Void>{
 				}
 				if(hi[SPA]!=null && !data[hi[SPA]].isEmpty()) {
 					try {
-						res.setBase_SPA(Integer.parseInt(data[hi[SPA]]));
+						res.setBaseSPA(Integer.parseInt(data[hi[SPA]]));
 					}catch (NumberFormatException e) {
 						LOG.warn("error procesando la entrada "+k+", atributo SPA no es numerico");
 						continue;
@@ -165,7 +165,7 @@ public class PokemonCsvImportJob extends AbstractJobPerformable<Void>{
 				}
 				if(hi[SPD]!=null && !data[hi[SPD]].isEmpty()) {
 					try {
-						res.setBase_SPD(Integer.parseInt(data[hi[SPD]]));
+						res.setBaseSPD(Integer.parseInt(data[hi[SPD]]));
 					}catch (NumberFormatException e) {
 						LOG.warn("error procesando la entrada "+k+", atributo SPD no es numerico");
 						continue;
@@ -173,7 +173,7 @@ public class PokemonCsvImportJob extends AbstractJobPerformable<Void>{
 				}
 				if(hi[SPE]!=null && !data[hi[SPE]].isEmpty()) {
 					try {
-						res.setBase_SPE(Integer.parseInt(data[hi[SPE]]));
+						res.setBaseSPE(Integer.parseInt(data[hi[SPE]]));
 					}catch (NumberFormatException e) {
 						LOG.warn("error procesando la entrada "+k+", atributo ATK no es numerico");
 						continue;
@@ -181,7 +181,7 @@ public class PokemonCsvImportJob extends AbstractJobPerformable<Void>{
 				}
 				if(hi[HP]!=null && !data[hi[HP]].isEmpty()) {
 					try {
-						res.setBase_HP(Integer.parseInt(data[hi[HP]]));
+						res.setBaseHP(Integer.parseInt(data[hi[HP]]));
 					}catch (NumberFormatException e) {
 						LOG.warn("error procesando la entrada "+k+", atributo ATK no es numerico");
 						continue;

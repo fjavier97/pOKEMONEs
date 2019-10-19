@@ -17,7 +17,7 @@ import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.controller.component.PagedTableAbstractController;
 import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
 import com.pokemon.pokemones.item.dto.PokemonDTO;
-import com.pokemon.pokemones.repository.PokemonDAO;
+import com.pokemon.pokemones.repository.PokemonRepository;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -46,9 +46,9 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 	
 	private final DialogService dialogService;
 	
-	private final PokemonDAO pokemonDAO;
+	private final PokemonRepository pokemonDAO;
 	
-	public @Autowired PokemonListController(final PokemonDAO pokemonDAO, final DialogService dialogService) {
+	public @Autowired PokemonListController(final PokemonRepository pokemonDAO, final DialogService dialogService) {
 		super();
 		this.pokemonDAO = pokemonDAO;
 		this.dialogService = dialogService;
@@ -69,12 +69,11 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 		if(selectedItem == null) {
 			return;
 		}	
-		
-		System.out.println("modificar");
+		LOG.info("sending model [id="+selectedItem.getPokedexNo()+",forma="+selectedItem.getForma()+"]");	
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("item",tableview.getSelectionModel().getSelectedItem());
-//		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("PokemonEditor", Navigation.FORWARD, map);
-//		publisher.publishEvent(evt);
+		map.put("model",selectedItem);
+		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("PokemonEditor", Navigation.FORWARD, map);
+		publisher.publishEvent(evt);
 	}
 	
 	private @FXML void crear() {

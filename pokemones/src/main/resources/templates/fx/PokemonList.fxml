@@ -54,22 +54,22 @@
 							<TableColumn fx:id="cabecera_stats" text="base stats">
 								<columns>
 									<TableColumn text="ATK">
-										<cellValueFactory><PropertyValueFactory property="base_ATK"/></cellValueFactory>
+										<cellValueFactory><PropertyValueFactory property="baseATK"/></cellValueFactory>
 									</TableColumn>
 									<TableColumn text="DEF">
-										<cellValueFactory><PropertyValueFactory property="base_DEF"/></cellValueFactory>
+										<cellValueFactory><PropertyValueFactory property="baseDEF"/></cellValueFactory>
 									</TableColumn>
 									<TableColumn text="SPA">
-										<cellValueFactory><PropertyValueFactory property="base_SPA"/></cellValueFactory>
+										<cellValueFactory><PropertyValueFactory property="baseSPA"/></cellValueFactory>
 									</TableColumn>
 									<TableColumn text="SPD">
-										<cellValueFactory><PropertyValueFactory property="base_SPD"/></cellValueFactory>
+										<cellValueFactory><PropertyValueFactory property="baseSPD"/></cellValueFactory>
 									</TableColumn>
 									<TableColumn text="SPE">
-										<cellValueFactory><PropertyValueFactory property="base_SPE"/></cellValueFactory>
+										<cellValueFactory><PropertyValueFactory property="baseSPE"/></cellValueFactory>
 									</TableColumn>
 									<TableColumn text="HP">
-										<cellValueFactory><PropertyValueFactory property="base_HP"/></cellValueFactory>
+										<cellValueFactory><PropertyValueFactory property="baseHP"/></cellValueFactory>
 									</TableColumn>
 								</columns>
 							</TableColumn>

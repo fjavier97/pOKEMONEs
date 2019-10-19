@@ -15,12 +15,17 @@ public class PokemonPK implements Serializable{
 	public PokemonPK() {
 		
 	}
+	
+	public PokemonPK(final int pokedexNo, final String forma) {
+		this.pokedexNo = pokedexNo;
+		this.forma = forma;
+	}
 
-	public int getPokedex_no() {
+	public int getPokedexNo() {
 		return pokedexNo;
 	}
 
-	public void setPokedex_no(int pokedexNo) {
+	public void setPokedexNo(int pokedexNo) {
 		this.pokedexNo = pokedexNo;
 	}
 

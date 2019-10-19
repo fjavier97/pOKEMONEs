@@ -12,6 +12,7 @@ import com.pokemon.pokemones.core.event.ComponenteChangeCommitEvent;
 import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
+import com.pokemon.pokemones.core.services.LoginService;
 
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -35,6 +36,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -73,8 +75,15 @@ public class CoreController extends AbstractController {
 		return menus;
 	}
 	
-	public @Autowired CoreController() {
+	private @FXML GridPane login;	
+	private @FXML BorderPane ui;
+	private @FXML HBox notificacioness;
+	
+	private final LoginService loginservice;
+	
+	public @Autowired CoreController(final LoginService loginservice) {
 		super();
+		this.loginservice = loginservice;
 	}
 	
 	private @FXML ToggleGroup toggle_idioma;
@@ -84,7 +93,7 @@ public class CoreController extends AbstractController {
 	 * **/
 	
 	private boolean navigation_menu_hidden=false;
-	private @FXML BorderPane root;
+	private @FXML StackPane root;
 	
 	public void toggleHide() {
 		menu_container.getChildren().clear();
@@ -227,7 +236,15 @@ public class CoreController extends AbstractController {
 	 * metodos llamados durante el ciclo de vida del controlador
 	 * **/
 	
-
+ 	private @FXML void login() {
+ 		System.out.println("login");
+ 		this.login.toBack();
+ 	}
+ 	
+ 	public void requestLogin() {
+ 		this.ui.toBack();
+ 	}
+ 	
 	@Override
 	public void handleParams(Map<String, Object> args) {
 		
