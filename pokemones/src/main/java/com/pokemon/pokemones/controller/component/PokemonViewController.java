@@ -38,7 +38,6 @@ public class PokemonViewController extends AbstractController {
 			grafico.getData().add(new Data((double) n.getBaseSPE(), "SPE"));
 			grafico.getData().add(new Data((double) n.getBaseDEF(), "DEF"));
 			grafico.getData().add(new Data((double) n.getBaseSPD(), "SPD"));
-
 		});
 	}
 

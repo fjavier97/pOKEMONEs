@@ -22,6 +22,8 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.util.Duration;
 import javafx.scene.Node;
@@ -38,10 +40,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import customfx.scene.control.ConfigurableMenuBar;
+import customfx.scene.control.NotificationArea;
 import customfx.scene.control.TreeMenu;
 
 @Component("Core")
@@ -53,7 +59,7 @@ public class CoreController extends AbstractController {
 					super.localization_service.changeLanguaje(((RadioMenuItem)n).getId());
 				}};
 	
-	private @FXML ListView<Node> notificationarea;
+	private @FXML NotificationArea notificationarea;
 			
 	/* referencias a la vista */
 	private @FXML ConfigurableMenuBar menus;	
@@ -127,43 +133,10 @@ public class CoreController extends AbstractController {
 	}
 	
 	public @EventListener void onNotificationEvent(final NotificationEvent evt) {
-		BorderPane not = new BorderPane();
-		HBox hbox = new HBox();
+			
+		notificationarea.getItems().add(evt);
 		
-		Label label = new Label(evt.getMessage());
-		Button btn = new Button("X");
-		btn.setOnAction(e->notificationarea.getItems().remove(not));
-		hbox.getChildren().addAll(label,btn);
-		hbox.setMaxWidth(Double.MAX_VALUE);
-		label.setMaxWidth(Double.MAX_VALUE);
-		HBox.setHgrow(label, Priority.ALWAYS);
-
-		not.setTop(hbox);
-		label.setAlignment(Pos.CENTER);
-
-		if(evt.getNode()!=null) {
-			evt.getNode().setMaxWidth(Double.MAX_VALUE);
-			not.setCenter(evt.getNode());
-		}
 		
-		Color color;
-		switch (evt.getThreat()) {
-			case ERROR:
-				color = Color.RED;
-				break;	
-			case SUCCESS:
-				color=Color.GREEN;
-				break;
-			case WARNING:
-				color= Color.YELLOW;
-				break;
-			default:
-				color= Color.BLUE;
-				break;
-		}
-		not.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, new Insets(0))));
-		
-		notificationarea.getItems().add(not);
 	}
 	
  	public void onComponentChangeCommitEvent(final ComponenteChangeCommitEvent evt, final boolean animate) {
@@ -287,14 +260,13 @@ public class CoreController extends AbstractController {
 		
 		tree.addEntry("/pruebas", "prueba1", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba1",Navigation.FORWARD)));
 		tree.addEntry("/pruebas", "prueba2", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba2",Navigation.BACKWARD)));
-		tree.addEntry("/pruebas", "pokemon", e->publisher.publishEvent(new ComponenteChangeRequestEvent("PokemonList",Navigation.LINK)));
+		tree.addEntry("/", "pokemon", e->publisher.publishEvent(new ComponenteChangeRequestEvent("PokemonList",Navigation.LINK)));
 		tree.addEntry("/sistema/procesos", "running jobs", e->publisher.publishEvent(new ComponenteChangeRequestEvent("JobList",Navigation.LINK)));
 		tree.addEntry("/sistema/procesos", "job definitions", e->publisher.publishEvent(new ComponenteChangeRequestEvent("JobClassList",Navigation.LINK)));
 		tree.addEntry("/sistema/procesos", "job history", e->publisher.publishEvent(new ComponenteChangeRequestEvent("JobHistory",Navigation.LINK)));
 		tree.addEntry("/sistema/procesos", "scheduled jobs", e->{});
 		publisher.publishEvent(new NotificationEvent("aplicacion iniciada",Threat.INFO));
-		
-		
+
 	}
 
 	public @Override void refreshData() {	

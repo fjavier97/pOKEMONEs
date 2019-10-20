@@ -11,6 +11,8 @@
 <?import java.lang.String?>
 <?import customfx.scene.chart.StarChart?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
 
 <fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.component.PokemonViewController"
 	xmlns="https://javafx.com/javafx/8"
@@ -27,7 +29,14 @@
 				</HBox>
 			</top>
 			<center>
-				<StarChart fx:id="grafico" maxValue="200" autoAdjustOverflow="false" areaColor="BLUE" gridAreaColor="WHITE"/>
+				<BorderPane >
+					<top>
+						<Text text="nombre"></Text>
+					</top>
+					<center>
+						<StarChart fx:id="grafico" maxValue="200" autoAdjustOverflow="false" areaColor="BLUE" gridAreaColor="WHITE"/>
+					</center>
+				</BorderPane>
 			</center>
 		</BorderPane>
 	</content>

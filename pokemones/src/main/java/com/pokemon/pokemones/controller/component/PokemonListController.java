@@ -98,7 +98,8 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 		alert.getButtonTypes().setAll(btnSI,btnNO);
 		if(alert.showAndWait().get()==btnSI) {
 			System.out.println("eliminar");
-		
+			//pokemonDAO.delete(selectedItem);
+			
 		}else {
 			System.out.println("nada");
 		}

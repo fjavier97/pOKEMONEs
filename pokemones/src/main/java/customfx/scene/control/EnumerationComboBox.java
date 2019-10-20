@@ -1,7 +1,5 @@
 package customfx.scene.control;
 
-import java.util.Observable;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;

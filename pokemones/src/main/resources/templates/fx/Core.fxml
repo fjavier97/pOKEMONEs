@@ -18,6 +18,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Background?>
 
 <fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.controller.component.CoreController"
 	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
@@ -52,12 +54,8 @@
 								<VBox minWidth="200" prefWidth="3000000">
 									<Button text="&lt;&lt;&lt;" onAction="#toggleHide" prefHeight="10" prefWidth="10000"/>
 									<TreeMenu VBox.vgrow="ALWAYS" fx:id="tree"/>
-									<ListView fx:id="notificationarea" prefHeight="350"/>
-								</VBox><!-- 
-								<VBox prefWidth="10" style="-fx-background-color:red;">
-									<Button text="&gt;" onAction="#toggleHide"
-										VBox.vgrow="ALWAYS" prefWidth="10" prefHeight="10000"/>
-								</VBox>	 -->				
+									<!-- <ListView fx:id="notificationarea" prefHeight="350"/> -->
+								</VBox>				
 							</HBox>
 						</fx:define>
 						<StackPane fx:id="menu_container" SplitPane.resizableWithParent="FALSE">
@@ -97,7 +95,10 @@
 			</GridPane>
 			
 			<!-- Panel de notificaciones (invisible) .i=2-->
-			<HBox fx:id="notificaciones" mouseTransparent="true" style="-fx-background-color: transparent">
+			<HBox fx:id="notificaciones" pickOnBounds="false">
+				<nodeOrientation><NodeOrientation fx:constant="RIGHT_TO_LEFT"/></nodeOrientation>
+				<NotificationArea fx:id="notificationarea" prefWidth="500" pickOnBounds="false" style="-fx-background-color: tansparent">
+				</NotificationArea> 
 			</HBox>	
 		
 		</StackPane>
