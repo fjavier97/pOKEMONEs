@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import customfx.scene.control.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.Text?>
+<?import java.util.LinkedList?>
+
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.component.controller.LoginController"
+	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
+	<menus>
+		<LinkedList>
+		</LinkedList>
+	</menus>
+	<content>
+		<GridPane fx:id="login" style="-fx-background-color: gray" alignment="center" hgap="20" vgap="20">
+				<padding><Insets top="25" right="25" bottom="10" left="25"/></padding>
+				<columnConstraints>						
+					 <ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+					 <ColumnConstraints hgrow="NEVER" prefWidth="350.0" />
+					 <ColumnConstraints hgrow="NEVER" prefWidth="150.0" />
+					 <ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+				</columnConstraints>
+				<children>
+					<StackPane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="2">
+						<Text text="LOG IN" fill="BLACK" textAlignment="CENTER" />
+					</StackPane>
+					<TextField fx:id="usrfield" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="2" />
+					<PasswordField fx:id="pwdfield" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="2" />
+					<Button text="login" GridPane.columnIndex="2" GridPane.rowIndex="3" onAction="#login" >
+						<maxWidth><Integer fx:constant="MAX_VALUE"/></maxWidth>
+					</Button>
+					<StackPane GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.columnSpan="2">
+						<Text fx:id="notifiaction" fill="RED" textAlignment="CENTER" />
+					</StackPane>
+					
+				</children>
+			</GridPane>
+	</content>
+</fx:root>
+

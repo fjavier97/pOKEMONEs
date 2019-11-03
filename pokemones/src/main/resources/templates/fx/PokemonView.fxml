@@ -13,8 +13,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.component.PokemonViewController"
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.component.controller.PokemonViewController"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>
@@ -31,7 +32,9 @@
 			<center>
 				<BorderPane >
 					<top>
-						<Text text="nombre"></Text>
+						<Text fx:id="nombre" textAlignment="CENTER">
+							<font><Font size="35.0" name="Arial Black"/></font>							
+						</Text>
 					</top>
 					<center>
 						<StarChart fx:id="grafico" maxValue="200" autoAdjustOverflow="false" areaColor="BLUE" gridAreaColor="WHITE"/>

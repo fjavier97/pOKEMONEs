@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.pokemon.pokemones.core.controller.dialog.AbstractDialogController;
+import com.pokemon.pokemones.core.dialog.controller.AbstractDialogController;
 
 import javafx.scene.control.Dialog;
 import javafx.stage.Window;

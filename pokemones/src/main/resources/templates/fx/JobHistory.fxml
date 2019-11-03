@@ -11,7 +11,7 @@
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.controller.component.JobHistoryController"
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.component.controller.JobHistoryController"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>

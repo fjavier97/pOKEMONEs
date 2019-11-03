@@ -14,8 +14,8 @@ import com.pokemon.pokemones.core.job.AbstractJobPerformable;
 import com.pokemon.pokemones.core.job.ScanJobs;
 import com.pokemon.pokemones.core.job.Schedule;
 import com.pokemon.pokemones.core.job.jobFinishedEvent;
-import com.pokemon.pokemones.repository.JobRepository;
-import com.pokemon.pokemones.repository.ScheduleRepository;
+import com.pokemon.pokemones.core.repository.JobRepository;
+import com.pokemon.pokemones.core.repository.ScheduleRepository;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

@@ -10,13 +10,13 @@
 <?import java.util.LinkedList?>
 <?import java.lang.String?>
 <?import java.lang.Double?>
-<?import customfx.scene.control.EnumerationComboBox?>
+<?import customfx.scene.control.EnumerationComboBoxImpl?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ToolBar?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.component.PokemonEditorController"
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.component.controller.PokemonEditorController"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>
@@ -35,12 +35,11 @@
 		<BorderPane >
 			<top>
 				<HBox >
-					<ToolBar >
-						<prefWidth><Long fx:constant="MAX_VALUE"/></prefWidth>
+					<ToolBar HBox.hgrow="ALWAYS" >
 						<Button text="guardar" onAction="#guardar" />
 						<Button text="recargar" onAction="#refrescar" />
 						<Button text="nuevo" onAction="#nuevo" />
-						<Pane HBox.hgrow="ALWAYS" />
+						<Pane HBox.hgrow="ALWAYS"/>
 						<Button text="atras" onAction="#atras" />
 					</ToolBar>					
 				</HBox>
@@ -64,24 +63,24 @@
 						<TextField	fx:id="input_forma" 	GridPane.columnIndex="2" GridPane.rowIndex="1" prefHeight="35"/>
 						
 						<Label fx:id="label_pokedex_n"		GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-						<Spinner fx:id="input_pokedex_n"	GridPane.columnIndex="2" GridPane.rowIndex="2" prefHeight="35" editable="TRUE">
+						<NumberSpinner fx:id="input_pokedex_n"	GridPane.columnIndex="2" GridPane.rowIndex="2" prefHeight="35" editable="TRUE">
 							<maxWidth><Double fx:constant="MAX_VALUE"/></maxWidth>
 							<valueFactory>
 						        <SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="1000"/>
 							</valueFactory>
-						</Spinner>
+						</NumberSpinner >
 						
 						<Label fx:id="label_tipo_1"					GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-						<EnumerationComboBox fx:id="input_tipo_1"	GridPane.columnIndex="2" GridPane.rowIndex="3" prefHeight="35"
+						<EnumerationComboBoxImpl fx:id="input_tipo_1"	GridPane.columnIndex="2" GridPane.rowIndex="3" prefHeight="35"
 							data="com.pokemon.pokemones.item.enums.Tipo">
 							<maxWidth><Double fx:constant="MAX_VALUE"/></maxWidth>
-						</EnumerationComboBox>
+						</EnumerationComboBoxImpl>
 						
 						<Label fx:id="label_tipo_2"					GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-						<EnumerationComboBox fx:id="input_tipo_2"	GridPane.columnIndex="2" GridPane.rowIndex="4" prefHeight="35"
+						<EnumerationComboBoxImpl fx:id="input_tipo_2"	GridPane.columnIndex="2" GridPane.rowIndex="4" prefHeight="35"
 							data="com.pokemon.pokemones.item.enums.Tipo">
 							<maxWidth><Double fx:constant="MAX_VALUE"/></maxWidth>
-						</EnumerationComboBox>
+						</EnumerationComboBoxImpl>
 						
 						<Label fx:id="label_ATK"			GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 						<Spinner fx:id="input_ATK"			GridPane.columnIndex="2" GridPane.rowIndex="5" prefHeight="35" editable="TRUE">

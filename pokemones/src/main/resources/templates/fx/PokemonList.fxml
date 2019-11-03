@@ -9,8 +9,11 @@
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TitledPane?>
+<?import customfx.scene.control.EnumerationMultipleComboBox?>
+<?import javafx.geometry.Insets?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.controller.component.PokemonListController"
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.component.controller.PokemonListController"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>
@@ -25,10 +28,39 @@
 			<Menu fx:id="archivo">
 				<MenuItem fx:id="importar" onAction="#importar"/>	
 			</Menu>
+			<Menu text="datos">
+				<MenuItem text="refrescar" onAction="#refreshData"/>
+			</Menu>
 		</LinkedList>
 	</menus>
 	<content>
 		<BorderPane >
+			<top>				 
+				<TitledPane fx:id="filtros" expanded="false" text="filtros">
+					<GridPane alignment="center" hgap="20" vgap="20">
+						<padding><Insets  top="25" right="25" bottom="10" left="25"/></padding>	
+						<columnConstraints>
+							<ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+						 	<ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+						</columnConstraints>
+						<children>	
+							<TextField fx:id="filtro_nombre" promptText="filtrar por nombre" 	GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+							<TextField fx:id="filtro_forma" promptText="filtrar por forma"		GridPane.columnIndex="1" GridPane.rowIndex="1" />
+							<TextField promptText="filtrar por id" 								GridPane.columnIndex="1" GridPane.rowIndex="2" />
+							<ComboBox 															GridPane.columnIndex="1" GridPane.rowIndex="3" />
+													
+							<TextField promptText="filtrar por ataque"							GridPane.columnIndex="0" GridPane.rowIndex="0" />
+							<TextField promptText="filtrar por defensa" 						GridPane.columnIndex="0" GridPane.rowIndex="1" />
+							<TextField promptText="filtrar por ataque especial" 				GridPane.columnIndex="0" GridPane.rowIndex="2" />
+							<TextField promptText="filtrar por defensa especial" 				GridPane.columnIndex="0" GridPane.rowIndex="3" />
+							<TextField promptText="filtrar por velocidad" 						GridPane.columnIndex="0" GridPane.rowIndex="4" />
+							<TextField promptText="filtrar por vida " 							GridPane.columnIndex="0" GridPane.rowIndex="5" />
+							
+							<Button text="aplicar" onAction="#refreshData"						GridPane.columnIndex="1" GridPane.rowIndex="4" />
+						</children>	
+					</GridPane>
+				</TitledPane>
+			</top>
 			<center>
 				<Pagination fx:id="paginator"/>
 				<fx:define>

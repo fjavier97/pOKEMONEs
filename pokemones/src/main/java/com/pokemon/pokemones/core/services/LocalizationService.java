@@ -44,6 +44,7 @@ public class LocalizationService {
 			final ResourceBundle bundle = ResourceBundle.getBundle(path, getLanguaje());
 			return bundle;
 		}catch (MissingResourceException e) {
+//			e.printStackTrace();
 			return null;
 		}
 	}

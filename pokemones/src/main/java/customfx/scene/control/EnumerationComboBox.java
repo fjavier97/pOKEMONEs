@@ -1,51 +1,21 @@
 package customfx.scene.control;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
+public interface EnumerationComboBox<E extends Enum<?>>{
+	
+	/* se recuerda que se necesita un constructor sin argumentos, y se aconsejan otros que seteen las cosas */
+	
+	/* en esta variable se guarda la clase */
+	//private  Class<E> data;
+	
+	/* consultar la clase */
+	public Class<E> getData();
+	
+	/* en los setters añadir elemento nulo para entradas vacias */
+	
+	/* especificar la clase (establece las opciones a elegir) */
+	public void setData(final Class<E> enumerationClass);
+	
+	/* especificar la clase a traves de su nombre (establece las opciones a elegir) */
+	public void setData(final String enumerationClassName) throws ClassNotFoundException;
 
-public class EnumerationComboBox extends ComboBox<Enum<?>>{
-
-	private final ObjectProperty<Class<Enum<?>>> data;
-	
-	public Class<Enum<?>> getData() {
-		return data.get();
-	}
-	
-	public ObjectProperty<Class<Enum<?>>> data() {
-		return data;
-	}
-	
-	public EnumerationComboBox() {
-		super();
-		this.data = new SimpleObjectProperty<Class<Enum<?>>>();
-		data.addListener((o,v,n)->{
-			final ObservableList<Enum<?>> items = FXCollections.observableArrayList(n.getEnumConstants());
-			items.add(null);
-			super.setItems(items);
-		});
-	}
-	
-	public EnumerationComboBox(final Class<Enum<?>> enumerationClass) {
-		this();
-		setData(enumerationClass);
-	}
-	
-	public void setData(final Class<Enum<?>> enumerationClass) {
-		data.set(enumerationClass);
-	}
-	
-	public EnumerationComboBox(final String enumerationClassName) throws ClassNotFoundException {
-		this();
-		setData(enumerationClassName);
-	}
-	
-	public void setData(final String enumerationClassName) throws ClassNotFoundException {
-		@SuppressWarnings("unchecked")
-		final Class<Enum<?>> enumerationClass = (Class<Enum<?>>) Class.forName(enumerationClassName);
-		setData(enumerationClass);
-	}
-	
 }

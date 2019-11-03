@@ -11,7 +11,7 @@
 <?import javafx.scene.control.Label?>
 
 <BorderPane
-	fx:controller="com.pokemon.pokemones.controller.component.HomeController"
+	fx:controller="com.pokemon.pokemones.component.controller.HomeController"
 	fx:id="home" xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml" >
 	<center>

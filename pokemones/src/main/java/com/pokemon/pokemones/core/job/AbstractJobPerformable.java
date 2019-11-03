@@ -11,8 +11,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import com.pokemon.pokemones.core.event.NotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
 import com.pokemon.pokemones.core.item.dto.JobDTO;
+import com.pokemon.pokemones.core.repository.JobRepository;
 import com.pokemon.pokemones.core.services.JobService;
-import com.pokemon.pokemones.repository.JobRepository;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;

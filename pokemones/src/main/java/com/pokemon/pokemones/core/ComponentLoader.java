@@ -1,6 +1,7 @@
 package com.pokemon.pokemones.core;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,13 +13,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import com.pokemon.pokemones.core.controller.component.AbstractController;
-import com.pokemon.pokemones.core.controller.dialog.AbstractDialogController;
+import com.pokemon.pokemones.core.component.controller.AbstractController;
+import com.pokemon.pokemones.core.dialog.controller.AbstractDialogController;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.DialogPane;
 import javafx.scene.paint.Color;
 
+import static com.pokemon.pokemones.core.util.CustomReflectionUtils.getAllFields;
 
 @Service
 public class ComponentLoader {
@@ -49,11 +51,11 @@ public class ComponentLoader {
 		this.fx_css_suffix=fx_css_suffix;
 	}
 
-	public AbstractController load(final String name, final Componente res) throws ComponentLoadException, IOException{
+	public AbstractController<?> load(final String name, final Componente res) throws ComponentLoadException, IOException{
 		return load(name, res, new HashMap<String,Object>());
 	}	
 	
-	public AbstractController load(final String name, final Componente res, final Map<String,Object> params) throws ComponentLoadException, IOException{
+	public AbstractController<?> load(final String name, final Componente res, final Map<String,Object> params) throws ComponentLoadException, IOException{
 		final String fulltemplatepath = fx_prefix+name+fx_suffix;
 		final String csspath = fx_css_prefix+name+fx_css_suffix;	
 		
@@ -82,9 +84,10 @@ public class ComponentLoader {
 			
 			loader.load();
 			
-			/*inyecto los argumentos, el contralodor seencarga de gestionar su estado */
-			((AbstractController)loader.getController()).handleParams(params);
-			((AbstractController)loader.getController()).refreshLabels();
+			/*inyecto componentes de la vista en el presentador, los argumentos, el contralodor seencarga de gestionar su estado */
+			injectFieldsIntoPresenter(loader.getNamespace(),((AbstractController<?>)loader.getController()).getPresenter());
+			((AbstractController<?>)loader.getController()).handleParams(params);
+			((AbstractController<?>)loader.getController()).refreshLabels();
 			
 			/* estilos */
 			final URL cssurl = getClass().getResource(csspath);
@@ -116,7 +119,7 @@ public class ComponentLoader {
 			return loader.getController();
 			
 		}catch (ClassCastException e1) {
-			e1.printStackTrace();
+			LOG.error("la definicion del componente no tiene el formato correcto",e1);
 			throw new ComponentLoadException(name, "la definicion del componente no tiene el formato correcto");
 		}catch (Exception e) {
 			throw e;
@@ -157,4 +160,40 @@ public class ComponentLoader {
 			return null;
 		}			
 	}
+	
+	private void injectFieldsIntoPresenter(Map<String, Object> namespace, Object presenter) {
+		if(presenter == null) {
+			LOG.info("no presenter found");
+			return;
+		}
+		if(namespace == null) {
+			LOG.error("no items where found to inject");
+			return;
+		}
+		
+		for (Field field : getAllFields(presenter.getClass())) {
+	        final boolean wasAccessible = field.isAccessible() ;
+	        field.setAccessible(true);
+			if (namespace.containsKey(field.getName())) {
+				if (field.getType().isInstance(namespace.get(field.getName()))){					
+					try {
+						LOG.debug("inyectando campo "+field.getName());
+						field.set(presenter, namespace.get(field.getName()));
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						LOG.error("error injectando componente con nombre "+field.getName());
+					}
+				}else{
+					LOG.error("error injectando componente con nombre "+field.getName()+":el tipo es ["+
+						namespace.get(field.getName()).getClass().getName()+"], pero se encontro ["+
+						field.getType().getClass().getName()+"]");
+				}
+			}else{
+				LOG.info("no se ha encontrado valor para injectar en el atributo "+field.getName());
+			}
+	        field.setAccessible(wasAccessible);
+	    }
+		
+		LOG.info("fields injected into presenter");
+	}
+	
 }

@@ -10,17 +10,19 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import com.pokemon.pokemones.core.controller.component.AbstractController;
-import com.pokemon.pokemones.core.controller.component.CoreController;
+import com.pokemon.pokemones.core.component.controller.AbstractController;
+import com.pokemon.pokemones.core.component.controller.CoreController;
 import com.pokemon.pokemones.core.event.ComponentDataRefreshEvent;
 import com.pokemon.pokemones.core.event.ComponentViewRefreshEvent;
 import com.pokemon.pokemones.core.event.ComponenteChangeCommitEvent;
 import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
 import com.pokemon.pokemones.core.event.LanguajeChangeEvent;
+import com.pokemon.pokemones.core.event.LoginNotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
 import com.pokemon.pokemones.core.event.StartEvent;
 import com.pokemon.pokemones.core.scopes.ComponentScope;
+import com.pokemon.pokemones.core.services.LoginService;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -38,14 +40,18 @@ public class ComponentManager {
 	private final ComponentLoader loader;	
 	
 	private String current_component_name;
-	private AbstractController currentComponentController;
+	private AbstractController<?> currentComponentController;
 	
 	private final ApplicationEventPublisher publisher;
 	
-	public @Autowired ComponentManager(ComponentLoader loader, ComponentScope scope, ApplicationEventPublisher publisher) {
+	private final LoginService loginService;
+	
+	public @Autowired ComponentManager(ComponentLoader loader, ComponentScope scope, ApplicationEventPublisher publisher,
+			final LoginService loginService) {
 		super();
 		this.LOG=LoggerFactory.getLogger(ComponentManager.class);
 		this.loader=loader;
+		this.loginService = loginService;
 		this.scope=scope;
 		this.publisher = publisher;
 	}
@@ -78,6 +84,15 @@ public class ComponentManager {
 		getStage().setScene(scene);
 	}
 		
+	private @EventListener void onLogin(final LoginNotificationEvent evt){
+		System.out.println(evt.isLogin()+"-"+evt.getUsr());
+		if(evt.isLogin()) {
+			coreComponentController.setLoginText(evt.getUsr());
+		}else {
+			coreComponentController.setLoginText("");
+		}
+	}
+	
 	private @EventListener void onStop(ContextClosedEvent evt){
 		scope.removeAll();
 	}
@@ -96,11 +111,16 @@ public class ComponentManager {
 			Platform.exit();
 		}
 		getStage().show();
-		return new ComponenteChangeRequestEvent("Prueba1");
+		return new ComponenteChangeRequestEvent("Login");
 	}
 	
 	private @EventListener void onComponentChangeRequest(ComponenteChangeRequestEvent evt){
 		LOG.info("se solicito el cambio al componente "+evt.getNewComponent());
+		
+		if(!loginService.isAuthenticated() && !evt.getNewComponent().equals("Login")) {
+			LOG.info("no has accedido al sistema");
+			return ;
+		}
 		
 		/* compruebo que no este ya cargado */
 		if(evt.getNewComponent().equals(current_component_name)) {
@@ -129,6 +149,7 @@ public class ComponentManager {
 			return ;
 		}catch (Exception e) {
 			LOG.error("no se ha podido cargar la clase "+evt.getNewComponent(),e.getCause());
+			e.printStackTrace();
 			publisher.publishEvent(new NotificationEvent("no se ha podido cargar la clase "+evt.getNewComponent(), Threat.ERROR));
 			return ;
 		}
