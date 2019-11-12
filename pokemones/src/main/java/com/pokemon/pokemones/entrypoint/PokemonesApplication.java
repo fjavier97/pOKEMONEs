@@ -13,6 +13,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -21,6 +22,7 @@ import com.pokemon.pokemones.core.event.StartEvent;
 import com.pokemon.pokemones.core.job.JobPerformable;
 import com.pokemon.pokemones.core.job.ScanJobs;
 import com.pokemon.pokemones.core.scopes.ComponentScope;
+import com.pokemon.pokemones.core.security.MethodSecurityConfig;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -35,13 +37,11 @@ public class PokemonesApplication extends Application{
 
 	private ConfigurableApplicationContext context;
 	
-	public static void main(String[] args) {
-		launch(args);
-	}
-
 	@Override
 	public void init() throws Exception {
-		context = SpringApplication.run(PokemonesApplication.class, getParameters().getRaw().toArray(new String[0]));	
+		final Class<?>[] clases = {MethodSecurityConfig.class,PokemonesApplication.class};
+		context = SpringApplication.run(clases, getParameters().getRaw().toArray(new String[0]));	
+
 	}
 	
 	@Override
@@ -56,10 +56,10 @@ public class PokemonesApplication extends Application{
 	
 	/* CONFIGURACION */
 	
-	
 	/* configuracion de jobs */
     public @Bean ClassPathScanningCandidateComponentProvider createComponentScanner() {
         // Don't pull default filters (@Component, etc.):
+    	System.out.println("creo comp scanner");
         ClassPathScanningCandidateComponentProvider provider
                 = new ClassPathScanningCandidateComponentProvider(false);
         provider.addIncludeFilter(new AnnotationTypeFilter(JobPerformable.class));
@@ -69,10 +69,12 @@ public class PokemonesApplication extends Application{
     /* configuracion del scope */
 	public @Bean static CustomScopeConfigurer customScopeConfigurer(final ComponentScope scope)
 	{
+		System.out.println("creo bean scope");
 		final CustomScopeConfigurer configurer = new CustomScopeConfigurer();
 		configurer.addScope("ComponentScope", scope);
 		return configurer;
 	}
+
 	
 //	@Bean(name="dataSource")
 //	public DataSource getDataSource(	@Value("com.mysql.jdbc.Driver")final String driver,

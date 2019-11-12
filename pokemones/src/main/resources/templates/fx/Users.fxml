@@ -18,6 +18,9 @@
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>
 		<LinkedList>
+			<Menu text="editar">
+				<MenuItem text="modificar" onAction="#modificar" />
+			</Menu>
 		</LinkedList>		
 	</menus>
 	<content>

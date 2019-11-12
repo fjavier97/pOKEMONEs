@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import customfx.scene.control.*?>
+<?import javafx.util.* ?>
+<?import java.lang.* ?>
+<?import java.util.LinkedList?>
+<?import java.lang.String?>
+<?import java.lang.Double?>
+<?import customfx.scene.control.EnumerationComboBoxImpl?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ContentDisplay?>
+<?import customfx.scene.control.MultiSelectionComboBox?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.component.controller.UserController"
+	xmlns="https://javafx.com/javafx/8"
+	xmlns:fx="https://javafx.com/fxml">
+	<menus>
+		<LinkedList>
+		</LinkedList>
+	</menus>
+	<content>
+		<BorderPane >
+			<top>
+				<HBox >
+					<ToolBar HBox.hgrow="ALWAYS" >
+						<Button text="nuevo" fx:id="button_nuevo" onAction="#nuevo" />
+						<Pane HBox.hgrow="ALWAYS"/>
+						<Button text="atras" fx:id="button_atras" onAction="#atras" />
+					</ToolBar>					
+				</HBox>
+			</top>
+			<center>
+			<TabPane>
+				<Tab fx:id="tab_objeto" closable="false">
+					<BorderPane>
+						<top>
+							<HBox >
+								<ToolBar HBox.hgrow="ALWAYS" >
+									<Button text="guardar" fx:id="button_guardar" onAction="#guardar" />
+									<Button text="recargar" fx:id="button_recargar" onAction="#refrescar" />
+								</ToolBar>					
+							</HBox>
+						</top>
+						<center>
+							<GridPane alignment="center" hgap="20" vgap="20">
+								<padding><Insets  top="25" right="25" bottom="10" left="25"/></padding>
+								<rowConstraints>
+									<RowConstraints vgrow="SOMETIMES" percentHeight="50"/>
+									<RowConstraints vgrow="NEVER" />
+									<RowConstraints vgrow="NEVER" />
+									<RowConstraints vgrow="NEVER" />
+									<RowConstraints vgrow="NEVER" />
+									<RowConstraints vgrow="SOMETIMES" percentHeight="50"/>
+								</rowConstraints>
+								<columnConstraints>
+									<ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+								 	<ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
+								 	<ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
+								 	<ColumnConstraints hgrow="NEVER" prefWidth="400.0" />
+								 	<ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+								</columnConstraints>
+													
+								<children>
+								
+									<Label fx:id="label_nombre"				GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+									<TextField  fx:id="input_nombre"		GridPane.columnIndex="2" GridPane.rowIndex="1" prefHeight="35"/>
+											
+									<Label fx:id="label_pwd_"				GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+									<PasswordField  fx:id="input_pwd"		GridPane.columnIndex="2" GridPane.rowIndex="2" prefHeight="35"/>
+									
+									<HBox 									GridPane.columnIndex="1" GridPane.rowIndex="3"  GridPane.columnSpan="2" prefHeight="35">
+										<Label text="prueba" HBox.hgrow="SOMETIMES" prefHeight="35">
+											<maxWidth><Long fx:constant="MAX_VALUE"/></maxWidth>
+										</Label>
+										<CheckBox  fx:id="input_enabled" prefHeight="35"/>
+									</HBox>							
+									
+																
+									<Label fx:id="label_roles"				GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+									<MultiSelectionComboBox fx:id="input_roles"			GridPane.columnIndex="2" GridPane.rowIndex="4" prefHeight="35">
+										<maxWidth><Double fx:constant="MAX_VALUE"/></maxWidth>
+									</MultiSelectionComboBox>
+																		
+									<ListView fx:id="selected_roles"		GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.rowSpan="4"
+									items="$input_roles.values"/>
+									
+								</children>
+								
+							</GridPane>
+						</center>
+					</BorderPane>
+					
+				</Tab>
+				<Tab fx:id="tab_pwd" closable="false">
+					<BorderPane>
+						<top>
+							<HBox >
+								<ToolBar HBox.hgrow="ALWAYS" >
+									<Button text="cambiar contraseña" fx:id="button_chang_pwd" onAction="#cambio_pwd" />
+								</ToolBar>					
+							</HBox>
+						</top>
+						<center>
+							<GridPane alignment="center" hgap="20" vgap="20">
+								<padding><Insets  top="25" right="25" bottom="10" left="25"/></padding>
+								<columnConstraints>
+									<ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+								 	<ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
+								 	<ColumnConstraints hgrow="NEVER" prefWidth="200.0" />
+								 	<ColumnConstraints hgrow="SOMETIMES" percentWidth="50" />
+								</columnConstraints>
+													
+								<children>
+						
+									<PasswordField	fx:id="input_pwd1" 	promptText="nueva contraseña"	prefHeight="35"
+										GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="2" />
+									
+									<PasswordField	fx:id="input_pwd2" promptText="repita contraseña"	prefHeight="35"
+										GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="2" />
+								</children>
+								
+							</GridPane>
+						</center>
+					</BorderPane>
+				</Tab>
+			</TabPane>
+				
+			</center>
+		</BorderPane>
+	</content>
+</fx:root>
+

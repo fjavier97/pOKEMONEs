@@ -3,6 +3,7 @@ package com.pokemon.pokemones.item.dto;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.pokemon.pokemones.core.item.dto.ItemDPO;
 import com.pokemon.pokemones.item.enums.Tipo;
 import com.pokemon.pokemones.item.pk.PokemonPK;
 
@@ -17,7 +18,7 @@ import javafx.beans.property.StringProperty;
 
 @IdClass(PokemonPK.class)
 @Entity @Table(name="Pokemon") @XmlRootElement(name="Pokemon")
-public class PokemonDTO {
+public class PokemonDTO implements ItemDPO<PokemonPK> {
 
 	private IntegerProperty pokedexNoProperty;
 	private StringProperty formaProperty;	
@@ -57,6 +58,9 @@ public class PokemonDTO {
 	}
 
 	public  @Transient PokemonPK getPK() {
+//		if(getPokedexNo()==0 || getForma()==null || getForma().isEmpty()) {
+//			return null;
+//		}
 		return new PokemonPK(getPokedexNo(),getForma());
 	}
 	

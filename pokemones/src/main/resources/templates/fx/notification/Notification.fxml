@@ -8,20 +8,23 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Background?>
+<?import javafx.scene.layout.StackPane?>
 
 <!-- fx:controller="com.pokemon.pokemones.core.NotificationNode" -->
 <fx:root xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml"
 	type="customfx.scene.control.NotificationCellGraphic" >	
 	
-	<BorderPane HBox.hgrow="SOMETIMES" >
+	<BorderPane HBox.hgrow="SOMETIMES" style="-fx-background-color: white;" >
 		<top>
 			<HBox prefHeight="35">
-				<Button fx:id="closeButton" text="X"/>
-				<Text fx:id="texto" HBox.hgrow="SOMETIMES" textAlignment="CENTER"/>
+				<Button fx:id="closeButton" text="X" style="-fx-background-color: transparent"/>
+				<StackPane HBox.hgrow="SOMETIMES">
+					<Text fx:id="texto" textAlignment="CENTER"/>
+				</StackPane>
 			</HBox>
 		</top>
 		<center>
-			<TitledPane fx:id="aditionalInfo" expanded="false">
+			<TitledPane fx:id="aditionalInfo" expanded="false" style="-fx-background-color: transparent">
 				<background>
 					<Background fx:constant="EMPTY" />
 				</background>

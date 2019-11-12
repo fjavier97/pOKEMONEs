@@ -1,4 +1,4 @@
-package com.pokemon.pokemones.core.services;
+package com.pokemon.pokemones.core.security;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -17,30 +17,34 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pokemon.pokemones.core.item.dto.RoleDPO;
 
-@Service
 public class CustomAuthenticationManager implements AuthenticationManager, AuthenticationProvider {
 
 	private final UserDetailsService userDetailsService;
+	private final PasswordEncoder passwordEncoder;
 	
 	private final static Logger LOG = LoggerFactory.getLogger(CustomAuthenticationManager.class);
 	
-	public @Autowired CustomAuthenticationManager( final UserDetailsService userDetailsService ){
+	public @Autowired CustomAuthenticationManager( final UserDetailsService userDetailsService, final PasswordEncoder passwordEncoder){
 		this.userDetailsService = userDetailsService;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	public @Override Authentication authenticate(Authentication authentication) throws AuthenticationException{
-		
+				
 		final String request_usr = (String) authentication.getPrincipal();
 		
 		final String request_pwd = (String) authentication.getCredentials();
 		
 		final UserDetails response = userDetailsService.loadUserByUsername(request_usr);
 		
-		if(!request_pwd.equals(response.getPassword())){
+		final boolean eq = passwordEncoder.matches(request_pwd, response.getPassword());
+		
+		if(!eq){
 			throw new BadCredentialsException("bad credentials");
 		}
 			

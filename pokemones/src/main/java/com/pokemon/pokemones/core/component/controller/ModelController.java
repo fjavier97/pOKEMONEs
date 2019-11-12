@@ -5,16 +5,22 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.pokemon.pokemones.core.item.dto.UserDPO;
-import com.pokemon.pokemones.core.services.SecurityUserService;
+import com.pokemon.pokemones.core.repository.SpecificationExecutor;
+import com.pokemon.pokemones.core.item.dto.ItemDPO;
+import com.pokemon.pokemones.core.services.ModelManagerService;
+import com.pokemon.pokemones.core.services.UserService;
 import com.pokemon.pokemones.item.dto.PokemonDTO;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.fxml.FXML;
 
-public abstract class ModelController<C, M> extends AbstractController<C>{
+public abstract class ModelController<C, M extends ItemDPO<K>, K> extends AbstractController<C>{
 
+	protected abstract ModelManagerService<M,K> getService();
+	
 	private final ObjectProperty<M> modelo;
 	private final BooleanProperty creating;
 	
@@ -34,39 +40,41 @@ public abstract class ModelController<C, M> extends AbstractController<C>{
 		creating.set(mode);
 	}
 
+
+	
 	public ModelController() {
 		creating = new SimpleBooleanProperty(true);
 		creating.addListener((obs, ov, nv)->{	
-			/* settear a disable lo que no puede cambiarse */
+			onCreationModeChange(nv);
 		});
 		
 		modelo=new SimpleObjectProperty<>();
 		modelo.addListener((obs, ov, nv)->{			
-			LOG.info("model changed, loading bindings");	
-			if(ov!=null) {
-				unbind(ov);
-			}
+			LOG.info("model changed, loading bindings");
+			if(ov!=null) unbind(ov);
 			bind(nv);			
 		});
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected abstract /*@Override*/ void bind(final M model);
+	protected abstract void onCreationModeChange(final boolean nowcreating); 
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected abstract /*@Override*/ void unbind(final M model);
+	protected abstract void bind(final M model);
 	
-	/* metodos heredados */
+	protected abstract void unbind(final M model);
+
 	public @Override void handleParams(Map<String, Object> args) {		
 		
 		setCreationMode(!args.containsKey("model"));
 		
-		//modelo.set(isCrationMode()?pokemonService.create():(PokemonDTO)args.get("model"));
+		if(args.containsKey("model")) {
+			modelo.set(isCrationMode()?getService().create():(M)args.get("model"));
+			LOG.info("model:"+getModel().toString());
+		}
 		
 		LOG.info("openenig editor in "+(isCrationMode()?"creating":"editing")+" mode");	
 	}
-	
+		
 	public @Override void refreshData() {
-		this.modelo.set(userService.findById(pk));
+		setModel(isCrationMode()?getService().create():getService().findById(getModel().getPK()));
 	}
 }

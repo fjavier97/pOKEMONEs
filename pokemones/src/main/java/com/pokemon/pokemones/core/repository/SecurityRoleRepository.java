@@ -4,10 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.pokemon.pokemones.core.item.dto.UserDPO;
+import com.pokemon.pokemones.core.item.dto.RoleDPO;
 
-public interface SecurityUserRepository extends JpaRepository<UserDPO, Long>, JpaSpecificationExecutor<UserDPO>{
+public interface SecurityRoleRepository extends JpaRepository<RoleDPO, Long>, JpaSpecificationExecutor<RoleDPO>{
 
-	public UserDetails findOneByUsername(final String username);
+
 	
 }

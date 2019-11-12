@@ -10,12 +10,13 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import com.pokemon.pokemones.core.repository.SpecificationExecutor;
+import com.pokemon.pokemones.core.services.ModelManagerService;
 import com.pokemon.pokemones.item.dto.PokemonDTO;
 import com.pokemon.pokemones.item.pk.PokemonPK;
 import com.pokemon.pokemones.repository.PokemonRepository;
 
 @Service
-public class PokemonService implements SpecificationExecutor<PokemonDTO>{
+public class PokemonService implements SpecificationExecutor<PokemonDTO>, ModelManagerService<PokemonDTO, PokemonPK>{
 
 	private final PokemonRepository pokemonRepository;
 	
