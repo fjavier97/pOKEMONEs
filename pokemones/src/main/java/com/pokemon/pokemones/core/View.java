@@ -6,22 +6,22 @@ import javafx.scene.control.Menu;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
-public class Componente {
+public class View {
 	
 	private List<Menu> menus;
 	private Pane content;
 	
-	public Componente() {
+	public View() {
 		this.content=null;
 		this.menus = null;
 	}
 	
-	public Componente(BorderPane content) {
+	public View(BorderPane content) {
 		this.content=content;
 		this.menus = null;
 	}
 	
-	public Componente(BorderPane content, List<Menu> menus) {
+	public View(BorderPane content, List<Menu> menus) {
 		this.content=content;
 		this.menus = menus;
 	}

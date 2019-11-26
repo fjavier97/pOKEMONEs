@@ -33,6 +33,9 @@ public class LoginService {
 			System.err.println("error, ya hay algien autenticado");
 			return;
 		}
+		
+		System.err.println(publisher);
+		
 		/* creamos token y lo autenticamos */
 		final Authentication unauthorizedToken = new UsernamePasswordAuthenticationToken(usr,pwd);
 		final Authentication authorizedToken = authenticationManager.authenticate(unauthorizedToken);

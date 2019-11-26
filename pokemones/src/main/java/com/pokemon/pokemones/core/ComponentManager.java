@@ -57,10 +57,12 @@ public class ComponentManager {
 	}
 	
 	private void changeComponent(final String nombreNuevoComponente, final boolean borrarAnterior) {
+		currentComponentController.setActivo(true);
 		if(current_component_name!=null && borrarAnterior) {
 			scope.remove(current_component_name);
 		}
 		current_component_name=nombreNuevoComponente;
+		
 	}
 	
 	public Stage getStage() {
@@ -73,8 +75,9 @@ public class ComponentManager {
 	
 	public void loadCoreComponent() throws ComponentLoadException, IOException {
 		
-		final Componente core_component = new Componente();
+		final View core_component = new View();
 		this.coreComponentController = (CoreController) loader.load("Core",core_component);
+		this.coreComponentController.setActivo(true);
 		
 		final Scene scene = new Scene(core_component.getContent());
 		if(core_component.hasMenu()) {
@@ -136,16 +139,28 @@ public class ComponentManager {
 		// Cargo el componente
 		LOG.info("cargando componente solicitado");
 		try{
+			final boolean borrarAnterior = evt.getNavigation()!=Navigation.FORWARD;
+			
 			/* construyo y paso el estado*/
-			final Componente component = new Componente();
-			this.currentComponentController = loader.load(evt.getNewComponent(), component, evt.getParams());
-						
+			final AbstractController<?> antiguoController = currentComponentController;
+			
+			final Component newcomp = loader.load(evt.getNewComponent(), evt.getParams());
+			
+			final View view = new View();
+			this.currentComponentController = loader.load(evt.getNewComponent(), view, evt.getParams());
+			currentComponentController.setActivo(true);
+			if(antiguoController!=null && borrarAnterior) {
+				antiguoController.setActivo(false);
+			}
+			scope.clean();//limpio los beans cacheados que no se necesiten
+			
 			/* cambio estado */
-			changeComponent(evt.getNewComponent(), evt.getNavigation()!=Navigation.FORWARD);
+			changeComponent(evt.getNewComponent(), borrarAnterior);
 			
 			
 			/* mando evento a coreController para que cambie su estado */
-			this.coreComponentController.onComponentChangeCommitEvent(new ComponenteChangeCommitEvent(component,evt.getNavigation()),false);
+			this.coreComponentController.onComponentChangeCommitEvent(new ComponenteChangeCommitEvent(view,evt.getNavigation()),false);
+			
 			return ;
 		}catch (Exception e) {
 			LOG.error("no se ha podido cargar la clase "+evt.getNewComponent(),e.getCause());

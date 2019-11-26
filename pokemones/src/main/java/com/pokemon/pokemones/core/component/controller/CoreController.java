@@ -28,10 +28,8 @@ import javafx.fxml.FXML;
 import javafx.util.Duration;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -44,7 +42,7 @@ import customfx.scene.control.NotificationArea;
 import customfx.scene.control.TreeMenu;
 
 @Component("Core")
-@Scope("ComponentScope")
+//@Scope("ComponentScope")
 public class CoreController extends AbstractController<Void> {
 		
 	private ChangeListener<? super Toggle> languajeChangeListener = (o,a,n)->{
@@ -76,13 +74,14 @@ public class CoreController extends AbstractController<Void> {
 	
 	private @FXML GridPane login;	
 	private @FXML BorderPane ui;
-	private @FXML HBox notificacioness;
+	private @FXML HBox notificaciones;
 	
 	private final LoginService loginService;
 	
 	public @Autowired CoreController(final LoginService loginService) {
 		super();
 		this.loginService = loginService;
+		LOG.info("CORE CONTROLLER INITIALIZED");
 	}
 	
 	private @FXML ToggleGroup toggle_idioma;
@@ -126,7 +125,6 @@ public class CoreController extends AbstractController<Void> {
 	}
 	
 	public @EventListener void onNotificationEvent(final NotificationEvent evt) {
-			
 		notificationarea.getItems().add(evt);
 		
 		
@@ -261,6 +259,7 @@ public class CoreController extends AbstractController<Void> {
 		tree.addEntry("/sistema/procesos", "job history", e->publisher.publishEvent(new ComponenteChangeRequestEvent("JobHistory",Navigation.LINK)));
 		tree.addEntry("/sistema/procesos", "scheduled jobs", e->{});
 		tree.addEntry("/sistema", "usuarios", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Users",Navigation.LINK)));
+		tree.addEntry("/sistema", "roles", e->publisher.publishEvent(new ComponenteChangeRequestEvent("Roles",Navigation.LINK)));
 		publisher.publishEvent(new NotificationEvent("aplicacion iniciada",Threat.INFO));
 
 	}

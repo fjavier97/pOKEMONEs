@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.Background?>
 <?import javafx.scene.control.MenuItem?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.component.controller.CoreController"
+<fx:root type="com.pokemon.pokemones.core.View" fx:controller="com.pokemon.pokemones.core.component.controller.CoreController"
 	xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml">
 	<menus>
 		<LinkedList>

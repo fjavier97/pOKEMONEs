@@ -24,6 +24,10 @@ import com.pokemon.pokemones.item.dto.PokemonDTO;
 import com.pokemon.pokemones.repository.PokemonRepository;
 import com.pokemon.pokemones.service.PokemonService;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -41,7 +45,7 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 	private final DialogService dialogService;
 	
 	private final PokemonService pokemonservice;
-	
+		
 	protected @Override SpecificationExecutor<PokemonDTO> getRepo(){
 		return pokemonservice;
 	}
@@ -50,6 +54,8 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 		super();
 		this.pokemonservice = pokemonservice;
 		this.dialogService = dialogService;
+		filterProperties.put("filtro.forma", new SimpleStringProperty());
+		filterProperties.put("filtro.nombre", new SimpleStringProperty());
 	}
 	
 	/*######################################################################################*/
@@ -127,14 +133,29 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 
 	@Override
 	protected void provideFilters(List<Specification<PokemonDTO>> especificaciones) {
-		especificaciones.add(PokemonRepository.stringContains("nombre", getPresenter().getFiltro_nombre().getText()));
-		especificaciones.add(PokemonRepository.stringContains("forma", getPresenter().getFiltro_forma().getText()));
+		especificaciones.add(PokemonRepository.stringContains("nombre", ((StringProperty)filterProperties.get("filtro.nombre")).get()));
+		especificaciones.add(PokemonRepository.stringContains("forma", ((StringProperty)filterProperties.get("filtro.forma")).get()));
+	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	protected void bindFilters() {
+		Bindings.bindBidirectional(getPresenter().getFiltro_nombre().textProperty(),(Property)filterProperties.get("filtro.nombre"));	
+		Bindings.bindBidirectional(getPresenter().getFiltro_forma().textProperty(),(Property)filterProperties.get("filtro.forma"));
 	}
 
 	@Override
 	protected PokemonListPresenter initPresenter() {
 		return new PokemonListPresenter();
 	}
+	
+	public @FXML @Override void refreshData() {	
+		System.err.println(((StringProperty)filterProperties.get("filtro.nombre")).get());
+		System.err.println(((StringProperty)filterProperties.get("filtro.forma")).get());
+		super.refreshData();
+	}
+
+
 
 
 

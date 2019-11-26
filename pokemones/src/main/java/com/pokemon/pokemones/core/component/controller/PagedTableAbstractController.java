@@ -1,6 +1,7 @@
 package com.pokemon.pokemones.core.component.controller;
 
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 import com.pokemon.pokemones.core.component.presenter.PagedTablePresenter;
 import com.pokemon.pokemones.core.repository.SpecificationExecutor;
 
+import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Pagination;
@@ -30,10 +32,13 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 	
 	protected int elements_per_page;
 	protected int current_index;
+	
+	protected final Map<String,Property<?>> filterProperties;
 
 	public PagedTableAbstractController() {
 		super();
 		current_index=0;
+		this.filterProperties = new HashMap<String, Property<?>>();
 	}
 
 	/**
@@ -78,6 +83,8 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 		getPresenter().getTableview().getItems().setAll(items);
 		return getPresenter().getTableview();	
 	}
+	
+	protected abstract void bindFilters();
 
 	protected abstract void provideFilters(final List<Specification<E>> especificaciones);
 	
@@ -97,6 +104,8 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 		if(getPresenter().getPaginator().getPageFactory()==null) {
 			getPresenter().getPaginator().setPageFactory(this::navigate);
 		}
+		
+		bindFilters();
 		
 		refreshData();
 	}	

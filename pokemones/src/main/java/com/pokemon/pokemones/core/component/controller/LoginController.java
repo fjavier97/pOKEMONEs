@@ -34,7 +34,8 @@ public class LoginController extends AbstractController<LoginPresenter> {
 	}
 	
 	private @FXML void login() {
- 		try {
+ 		try {	
+ 			System.err.println("service = "+loginService);
  			loginService.login(getPresenter().getUsrfield().getText(), getPresenter().getPwdfield().getText());
  			//getPresenter().getNotifiaction().setText("");
  	 		//clear(true,true);

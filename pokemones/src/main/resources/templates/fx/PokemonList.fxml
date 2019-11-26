@@ -13,7 +13,7 @@
 <?import customfx.scene.control.EnumerationMultipleComboBox?>
 <?import javafx.geometry.Insets?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.component.controller.PokemonListController"
+<fx:root type="com.pokemon.pokemones.core.View" fx:controller="com.pokemon.pokemones.component.controller.PokemonListController"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>

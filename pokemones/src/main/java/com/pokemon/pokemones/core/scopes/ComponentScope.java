@@ -9,10 +9,12 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import com.pokemon.pokemones.core.component.controller.AbstractController;
+
 @Component
 public class ComponentScope implements Scope {
 
-	private final Map<String,Object> beans;
+	private final Map<String, AbstractController<?>> beans;
 	private final Map<String, Runnable> destructionCallbacks;
 
 	public ComponentScope() {
@@ -23,7 +25,7 @@ public class ComponentScope implements Scope {
 	
 	public @Override Object get(String name, ObjectFactory<?> objectFactory) {
 		if(!beans.containsKey(name)) {
-			beans.put(name, objectFactory.getObject());
+			beans.put(name, (AbstractController<?>)objectFactory.getObject());
 		}
 		return beans.get(name);
 	}
@@ -34,6 +36,13 @@ public class ComponentScope implements Scope {
 			destructionCallbacks.remove(name).run();
 		}
 		return beans.remove(name);
+	}
+	
+	public void clean() {
+		for(String k: beans.keySet()) {
+			if(!beans.get(k).isActivo())
+				remove(k);
+		}
 	}
 	
 	public void removeAll() {

@@ -21,7 +21,7 @@
 <?import customfx.scene.control.MultiSelectionComboBox?>
 <?import javafx.scene.layout.HBox?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.component.controller.UserController"
+<fx:root type="com.pokemon.pokemones.core.View" fx:controller="com.pokemon.pokemones.core.component.controller.UserController"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>

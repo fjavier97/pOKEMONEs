@@ -12,7 +12,7 @@
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.control.ListView?>
 
-<fx:root type="com.pokemon.pokemones.core.Componente" fx:controller="com.pokemon.pokemones.core.component.controller.JobClassListController"
+<fx:root type="com.pokemon.pokemones.core.View" fx:controller="com.pokemon.pokemones.core.component.controller.JobClassListController"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>

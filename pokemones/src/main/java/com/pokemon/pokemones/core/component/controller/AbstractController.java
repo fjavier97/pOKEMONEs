@@ -95,6 +95,18 @@ public abstract class AbstractController<C> {
 	    }
 	}
 	
+	/* FLAG COMPONENTE ACTIVO ******************************************************************* */
+	
+	private boolean activo;	
+	
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(final boolean activo) {
+		this.activo = activo;
+	}
+
 	/* LOG ************************************************************************************** */
 	protected final Logger LOG;
 	
@@ -107,4 +119,6 @@ public abstract class AbstractController<C> {
 	
 	public abstract void refreshData();
 		
+	
+	
 }

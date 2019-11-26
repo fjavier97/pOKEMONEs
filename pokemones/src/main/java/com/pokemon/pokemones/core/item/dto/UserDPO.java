@@ -57,7 +57,9 @@ public class UserDPO implements UserDetails, ItemDPO<Long> {
 		return authorities;
 	}
 	
-	@ManyToMany @JoinTable(name="user_role",joinColumns=@JoinColumn(name="user_id"),inverseJoinColumns=@JoinColumn(name="role_id")) @Override
+	@ManyToMany 
+	@JoinTable(name="user_role",joinColumns=@JoinColumn(name="user_id"),inverseJoinColumns=@JoinColumn(name="role_id")) 
+	@Override
 	public List<RoleDPO> getAuthorities(){
 		return authorities;
 	}

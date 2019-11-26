@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.pokemon.pokemones.core.component.controller.AbstractController;
 import com.pokemon.pokemones.core.dialog.controller.AbstractDialogController;
+import com.pokemon.pokemones.core.scopes.ViewCache;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.DialogPane;
@@ -29,13 +30,15 @@ public class ComponentLoader {
 	
 	private final ApplicationContext ctx;
 	
+	private final ViewCache cache;
+	
 	private final String fx_prefix;
 	private final String fx_suffix;
 	
 	private final String fx_css_prefix;
 	private final String fx_css_suffix;	
 	
-	public @Autowired ComponentLoader(ApplicationContext ctx,
+	public @Autowired ComponentLoader(ApplicationContext ctx, ViewCache cache,
 			@Value("${fx.view.prefix}")String fx_prefix,
 			@Value("${fx.view.suffix}")String fx_suffix,
 			@Value("${fx.css.prefix}")String fx_css_prefix, 
@@ -44,6 +47,7 @@ public class ComponentLoader {
 		this.LOG=LoggerFactory.getLogger(ComponentLoader.class);
 
 		this.ctx=ctx;
+		this.cache = cache;
 		
 		this.fx_prefix=fx_prefix;
 		this.fx_suffix=fx_suffix;
@@ -51,11 +55,22 @@ public class ComponentLoader {
 		this.fx_css_suffix=fx_css_suffix;
 	}
 
-	public AbstractController<?> load(final String name, final Componente res) throws ComponentLoadException, IOException{
+	public Component load(final String name, final Map<String,Object> params) throws ComponentLoadException, IOException {
+		final Component res;		
+		if(cache.contains(name)) {
+			res = cache.get(name);
+		}else {
+			res=new Component();
+			res.setController(load(name,res.getView(),params));
+		}		
+		return res;
+	}
+	
+	public AbstractController<?> load(final String name, final View res) throws ComponentLoadException, IOException{
 		return load(name, res, new HashMap<String,Object>());
 	}	
 	
-	public AbstractController<?> load(final String name, final Componente res, final Map<String,Object> params) throws ComponentLoadException, IOException{
+	public AbstractController<?> load(final String name, final View res, final Map<String,Object> params) throws ComponentLoadException, IOException{
 		final String fulltemplatepath = fx_prefix+name+fx_suffix;
 		final String csspath = fx_css_prefix+name+fx_css_suffix;	
 		
@@ -79,7 +94,7 @@ public class ComponentLoader {
 		
 		/* cargo el componente y añado la hoja de css */
 		try {
-			
+			System.out.println(res);
 			loader.setRoot(res);
 			
 			loader.load();

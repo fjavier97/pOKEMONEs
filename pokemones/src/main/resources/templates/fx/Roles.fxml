@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import customfx.scene.control.*?>
+<?import javafx.util.Pair?>
+<?import java.util.LinkedList?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TitledPane?>
+<?import customfx.scene.control.EnumerationMultipleComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.Pane?>
+
+<fx:root type="com.pokemon.pokemones.core.View" fx:controller="com.pokemon.pokemones.core.component.controller.RolesController"
+	xmlns="https://javafx.com/javafx/8"
+	xmlns:fx="https://javafx.com/fxml">
+	<menus>
+		<LinkedList>
+			
+		</LinkedList>		
+	</menus>
+	<content>
+		<BorderPane >
+			<top>				 
+			</top>
+			<left>
+				<Pagination fx:id="paginator"/>
+				<fx:define>
+					<ListView fx:id="listview" prefWidth="302" >
+					</ListView>
+				</fx:define>
+			</left>
+			<center>
+				<Pane >
+				</Pane>
+			</center>
+
+		</BorderPane>
+	</content>
+	
+</fx:root>
