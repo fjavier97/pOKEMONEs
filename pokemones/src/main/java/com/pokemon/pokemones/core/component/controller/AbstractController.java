@@ -16,6 +16,8 @@ import com.pokemon.pokemones.core.ComponentManager;
 
 import com.pokemon.pokemones.core.services.LocalizationService;
 
+import javafx.scene.control.Tooltip;
+
 public abstract class AbstractController<C> {	
 	
 	/* PRESENTADOR ****************************************************************************** */
@@ -52,8 +54,37 @@ public abstract class AbstractController<C> {
 		this.localizationService = localizationService;
 	}
 	
-	private final static String[] opciones = {"setText","setPromptText"/*setToolTip*/};
+	private final static Opcion[] opciones = 
+		{new Opcion(String.class,"setText"), new Opcion(String.class,"setPromptText"), new Opcion(Tooltip.class,"setToolTip")};
+	
+	private static class Opcion{
+		
+		private final Class<?> contentClass;
+		private final String methodName;
+		
+		public Opcion(Class<?> contentClass, String methodName) {
+			super();
+			this.contentClass = contentClass;
+			this.methodName = methodName;
+		}
 
+		public Class<?> getContentClass() {
+			return contentClass;
+		}
+
+		public String getMethodName() {
+			return methodName;
+		}
+		
+		
+		
+	}
+
+	public void refreshView() {
+		refreshLabels();
+		refreshData();
+	}
+	
 	public void refreshLabels(){
 		if(getPresenter()==null){
 			LOG.info("no presenter found to update");
@@ -74,16 +105,19 @@ public abstract class AbstractController<C> {
 				}
 		
 				final String k = o.getClass().getSimpleName()+"."+f.getName();
-				for(String opt: opciones){
-					try{			
-						o.getClass().getMethod(opt,String.class).invoke(o, b.getString(k));
+				for(Opcion opt: opciones){
+					try{	
+						final Class<?> c = opt.getContentClass();// tipo de la etiqueta que estoy pasando
+						final Object m_arg = c.equals(String.class)?b.getString(k):c.getConstructor(String.class).newInstance(b.getString(k));// nueva etiqueta
+						//llamo al metodo con la nueva etiqueta. si no es string, creo un objeto utilizando el constructor con string como pareametro.
+						o.getClass().getMethod(opt.getMethodName(),c).invoke(o, m_arg);
 						break;
 					} catch(NoSuchMethodException me) {
 						continue;
 					} catch(MissingResourceException mre) {
 						LOG.error("el campo "+f.getName()+" no esta localizado");
 						continue;
-					} catch (InvocationTargetException | SecurityException e) {
+					} catch (InvocationTargetException | SecurityException | InstantiationException e) {
 						LOG.error("error inyectando valor:"+e.getMessage());
 						continue;
 					}
@@ -107,6 +141,17 @@ public abstract class AbstractController<C> {
 		this.activo = activo;
 	}
 
+	/* NOMBRE *********************************************************************************** */
+	
+	public String getComponentName(){
+		Class<?> c = getClass();
+		if(c.isAnnotationPresent(Component.class)){
+			return c.getAnnotation(Component.class).value();
+		}else{
+			return c.getSimpleName();
+		}
+	}
+	
 	/* LOG ************************************************************************************** */
 	protected final Logger LOG;
 	

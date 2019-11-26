@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.component.presenter.UsersPresenter;
-import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 import com.pokemon.pokemones.core.item.dto.UserDPO;
 import com.pokemon.pokemones.core.repository.SpecificationExecutor;
 import com.pokemon.pokemones.core.services.UserService;
@@ -55,8 +55,14 @@ public class UsersController extends PagedTableAbstractController<UserDPO , User
 		}
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("model",selectedItem);
-		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("User", Navigation.FORWARD, map);
+		final ComponentChangeRequestEvent evt = new ComponentChangeRequestEvent("User", Navigation.FORWARD, map);
 		publisher.publishEvent(evt);
+	}
+
+	@Override
+	protected void bindFilters() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

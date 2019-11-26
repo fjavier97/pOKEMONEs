@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.component.controller.AbstractController;
-import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,7 +29,7 @@ public class Prueba2Controller extends AbstractController<Void> {
 	private @FXML void prueba2() {
 		Map<String,Object> params = new HashMap<>();
 		params.put("param1","hola");
-		publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba1", Navigation.FORWARD, params));
+		publisher.publishEvent(new ComponentChangeRequestEvent("Prueba1", Navigation.FORWARD, params));
 		
 	}
 	

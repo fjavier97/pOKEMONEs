@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.pokemon.pokemones.component.presenter.PokemonViewPresenter;
 import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.component.controller.AbstractController;
-import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 import com.pokemon.pokemones.item.dto.PokemonDTO;
 
 import customfx.scene.chart.StarChart;
@@ -49,7 +49,7 @@ public class PokemonViewController extends AbstractController<PokemonViewPresent
 	}
 
 	private @FXML void atras() {
-		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("PokemonList", Navigation.BACKWARD);
+		final ComponentChangeRequestEvent evt = new ComponentChangeRequestEvent("PokemonList", Navigation.BACKWARD);
 		publisher.publishEvent(evt);
 	}
 

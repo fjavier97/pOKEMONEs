@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import com.pokemon.pokemones.core.component.presenter.PagedTablePresenter;
 import com.pokemon.pokemones.core.repository.SpecificationExecutor;
+import com.pokemon.pokemones.core.services.DataVisualizationPropertyService;
 
 import javafx.beans.property.Property;
 import javafx.fxml.FXML;
@@ -28,9 +30,10 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 		setMaxPageIndicatorCount() es el numero botones que aparecen abajo para ir a la otra pagina
 	 */
 	
+	private DataVisualizationPropertyService dataVisualizationPropertyService;
+	
 	protected abstract SpecificationExecutor<E> getRepo(); 
 	
-	protected int elements_per_page;
 	protected int current_index;
 	
 	protected final Map<String,Property<?>> filterProperties;
@@ -40,6 +43,11 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 		current_index=0;
 		this.filterProperties = new HashMap<String, Property<?>>();
 	}
+	
+	public @Autowired void setDataVisualizationPropertyService(final DataVisualizationPropertyService dataVisualizationPropertyService){
+		this.dataVisualizationPropertyService = dataVisualizationPropertyService;
+	}
+	
 
 	/**
 	 * este metodo se tiene que encargar de vaciar la tabla y pedir y cargar los itemspertenecientes a la pagina i.
@@ -64,7 +72,7 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 		List<Specification<E>> filtro = new LinkedList<Specification<E>>();
 		provideFilters(filtro);
 		
-		final Page<E> page = getRepo().findAll(specifications(filtro),PageRequest.of(indice, elements_per_page));
+		final Page<E> page = getRepo().findAll(specifications(filtro),PageRequest.of(indice, dataVisualizationPropertyService.getElementsPerPage()));
 
 		// obtener elemetos nuevos
 		final List<E> items = page.getContent();
@@ -88,10 +96,6 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 
 	protected abstract void provideFilters(final List<Specification<E>> especificaciones);
 	
-	protected void setElementsperPage(final int elements_per_page) {
-		this.elements_per_page=elements_per_page;
-	}
-
 	public @Override void handleParams(Map<String, Object> args) {
 		if(args.containsKey("index")) {
 			current_index=(Integer)args.get("index");
@@ -99,7 +103,6 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 		}
 		System.out.println(getPresenter().getPaginator()==null);
 		getPresenter().getPaginator().setMaxPageIndicatorCount(7);
-		setElementsperPage(3);//TODO cambiar esto a bien
 		
 		if(getPresenter().getPaginator().getPageFactory()==null) {
 			getPresenter().getPaginator().setPageFactory(this::navigate);

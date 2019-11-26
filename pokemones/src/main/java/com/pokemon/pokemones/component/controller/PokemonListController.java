@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import com.pokemon.pokemones.component.presenter.PokemonListPresenter;
 import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.component.controller.PagedTableAbstractController;
-import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
 import com.pokemon.pokemones.item.dto.PokemonDTO;
@@ -72,12 +72,12 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 		LOG.info("sending model [id="+selectedItem.getPokedexNo()+",forma="+selectedItem.getForma()+"]");	
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("model",selectedItem);
-		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("PokemonEditor", Navigation.FORWARD, map);
+		final ComponentChangeRequestEvent evt = new ComponentChangeRequestEvent("PokemonEditor", Navigation.FORWARD, map);
 		publisher.publishEvent(evt);
 	}
 	
 	private @FXML void crear() {
-		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("PokemonEditor", Navigation.FORWARD);
+		final ComponentChangeRequestEvent evt = new ComponentChangeRequestEvent("PokemonEditor", Navigation.FORWARD);
 		publisher.publishEvent(evt);
 	}
 	
@@ -119,7 +119,7 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("item",selectedItem);
 		
-		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("PokemonView", Navigation.FORWARD, map);
+		final ComponentChangeRequestEvent evt = new ComponentChangeRequestEvent("PokemonView", Navigation.FORWARD, map);
 		publisher.publishEvent(evt);
 	}
 	

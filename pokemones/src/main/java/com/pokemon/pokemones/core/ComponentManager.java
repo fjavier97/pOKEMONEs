@@ -14,12 +14,9 @@ import com.pokemon.pokemones.core.component.controller.AbstractController;
 import com.pokemon.pokemones.core.component.controller.CoreController;
 import com.pokemon.pokemones.core.event.ComponentDataRefreshEvent;
 import com.pokemon.pokemones.core.event.ComponentViewRefreshEvent;
-import com.pokemon.pokemones.core.event.ComponenteChangeCommitEvent;
-import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 import com.pokemon.pokemones.core.event.LanguajeChangeEvent;
 import com.pokemon.pokemones.core.event.LoginNotificationEvent;
-import com.pokemon.pokemones.core.event.NotificationEvent;
-import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
 import com.pokemon.pokemones.core.event.StartEvent;
 import com.pokemon.pokemones.core.scopes.ComponentScope;
 import com.pokemon.pokemones.core.services.LoginService;
@@ -39,7 +36,6 @@ public class ComponentManager {
 	private CoreController coreComponentController;
 	private final ComponentLoader loader;	
 	
-	private String current_component_name;
 	private AbstractController<?> currentComponentController;
 	
 	private final ApplicationEventPublisher publisher;
@@ -55,16 +51,7 @@ public class ComponentManager {
 		this.scope=scope;
 		this.publisher = publisher;
 	}
-	
-	private void changeComponent(final String nombreNuevoComponente, final boolean borrarAnterior) {
-		currentComponentController.setActivo(true);
-		if(current_component_name!=null && borrarAnterior) {
-			scope.remove(current_component_name);
-		}
-		current_component_name=nombreNuevoComponente;
 		
-	}
-	
 	public Stage getStage() {
 		return stage;
 	}
@@ -99,12 +86,8 @@ public class ComponentManager {
 	private @EventListener void onStop(ContextClosedEvent evt){
 		scope.removeAll();
 	}
-	
-	private @EventListener void onLanguajeChanged(LanguajeChangeEvent evt) {
-		currentComponentController.refreshLabels();
-	}
-	
-	private @EventListener ComponenteChangeRequestEvent onStart(StartEvent evt){
+		
+	private @EventListener ComponentChangeRequestEvent onStart(StartEvent evt){
 		setStage(evt.getStage());
 		getStage().setMaximized(true);
 		try{
@@ -114,60 +97,69 @@ public class ComponentManager {
 			Platform.exit();
 		}
 		getStage().show();
-		return new ComponenteChangeRequestEvent("Login");
+		return new ComponentChangeRequestEvent("Login");
 	}
 	
-	private @EventListener void onComponentChangeRequest(ComponenteChangeRequestEvent evt){
-		LOG.info("se solicito el cambio al componente "+evt.getNewComponent());
+	private final @EventListener void onComponentChangeRequest(final ComponentChangeRequestEvent evt){
 		
-		if(!loginService.isAuthenticated() && !evt.getNewComponent().equals("Login")) {
-			LOG.info("no has accedido al sistema");
-			return ;
-		}
+		LOG.info("componente requerido: "+evt.getNewComponentName());
+	
+		/* comprobaciones */
 		
-		/* compruebo que no este ya cargado */
-		if(evt.getNewComponent().equals(current_component_name)) {
-			LOG.info("componente solicitado ya esta cargado actualmente");
-			return ;
-		}
-
-		/* compruebo que el corecontroller no este a mitad de transicion */
-		if(coreComponentController!= null && coreComponentController.isAnimationRunning()) {
-			LOG.info("espera a acabar la animacion");
-			return ;
-		}
-		// Cargo el componente
-		LOG.info("cargando componente solicitado");
-		try{
-			final boolean borrarAnterior = evt.getNavigation()!=Navigation.FORWARD;
-			
-			/* construyo y paso el estado*/
-			final AbstractController<?> antiguoController = currentComponentController;
-			
-			final Component newcomp = loader.load(evt.getNewComponent(), evt.getParams());
-			
-			final View view = new View();
-			this.currentComponentController = loader.load(evt.getNewComponent(), view, evt.getParams());
-			currentComponentController.setActivo(true);
-			if(antiguoController!=null && borrarAnterior) {
-				antiguoController.setActivo(false);
+		// comprobar seguridad
+		if(!loginService.isAuthenticated()){
+			if(!evt.getNewComponentName().equals("Login")){
+				LOG.error("no estas autenticado, login para acceder");
+				// ocultar el menu si no se puede usar
+				return;
 			}
-			scope.clean();//limpio los beans cacheados que no se necesiten
-			
-			/* cambio estado */
-			changeComponent(evt.getNewComponent(), borrarAnterior);
-			
-			
-			/* mando evento a coreController para que cambie su estado */
-			this.coreComponentController.onComponentChangeCommitEvent(new ComponenteChangeCommitEvent(view,evt.getNavigation()),false);
-			
-			return ;
-		}catch (Exception e) {
-			LOG.error("no se ha podido cargar la clase "+evt.getNewComponent(),e.getCause());
-			e.printStackTrace();
-			publisher.publishEvent(new NotificationEvent("no se ha podido cargar la clase "+evt.getNewComponent(), Threat.ERROR));
-			return ;
+		}else{		
+//			if(checkAuthorization()){
+//				LOG.error("no estas autorizado");
+//				// tambien notificacion
+//				return;
+//			}
 		}
+		
+		// comprobar que no este ya cargado
+		if(currentComponentController!=null && currentComponentController.getComponentName().equals(evt.getNewComponentName())){
+			return;
+		}
+		
+		/* comprobaciones terminadas */
+		
+		// pido permiso al coreContreller para obtener el lock, si lo acepta, el se encarga de liberarlo. si no lo acepta salimos
+		if(!coreComponentController.requestComponentChangeTransaction(this/*referencia al objeto que lo esta utilizando*/)){
+			LOG.info("core controller is currently busy");
+			return;
+		}
+		
+		try{// cargamos el componente y lo insertamos
+		
+			/* carga */
+			final View view = new View();
+			final AbstractController<?> newController = loader.load(evt.getNewComponentName(), view, evt.getParams());
+			
+			/* visualizacion */
+			currentComponentController = newController;		
+			coreComponentController.changeContentComponent(view, evt.getNavigation(), this);// la animacion que lo decida el coreControler de un PropertyService
+			
+			/* limpio cache de controladores */
+			if(evt.getNavigation() == Navigation.LINK){
+				scope.clean();
+			}
+			
+			LOG.debug("componente cambiado");
+		
+		}catch(Throwable ex){
+			// si hay cualqier excepcion o error avisamos al CoreController para que libere el lock
+			coreComponentController.freeComponentChangeTransaction(this);
+			LOG.error("error", ex);
+		}	
+	}
+	
+	private @EventListener void onLanguajeChanged(LanguajeChangeEvent evt) {
+		currentComponentController.refreshLabels();
 	}
 	
 	private @EventListener void onComponentDataRefresh(ComponentDataRefreshEvent evt){
@@ -176,6 +168,7 @@ public class ComponentManager {
 	}
 	
 	private @EventListener void onComponentViewRefresh(ComponentViewRefreshEvent evt){
-		// TODO cargar la vista otra vez
+		LOG.info("referscando datos");
+		currentComponentController.refreshView();
 	}
 }

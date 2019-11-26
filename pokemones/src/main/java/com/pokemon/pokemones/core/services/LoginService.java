@@ -10,7 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.pokemon.pokemones.core.Navigation;
-import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 import com.pokemon.pokemones.core.event.LoginNotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
@@ -46,7 +46,7 @@ public class LoginService {
 		/* publicamos evento para cambiar usuario en UI */
 		publisher.publishEvent(new NotificationEvent("login successful",Threat.SUCCESS));
 		/* cambiamos el componente al componente inicial */
-		publisher.publishEvent(new ComponenteChangeRequestEvent("Prueba1", Navigation.LINK));
+		publisher.publishEvent(new ComponentChangeRequestEvent("Prueba1", Navigation.LINK));
 	}
 	
 	public void logout(){
@@ -58,7 +58,7 @@ public class LoginService {
 		/* publicamos evento para cambiar usuario en UI */
  		publisher.publishEvent(new LoginNotificationEvent(false));
 		/* cambiamos el componente al componente de login */
- 		publisher.publishEvent(new ComponenteChangeRequestEvent("Login", Navigation.LINK));
+ 		publisher.publishEvent(new ComponentChangeRequestEvent("Login", Navigation.LINK));
 	}
 	
 	public boolean isAuthenticated() {

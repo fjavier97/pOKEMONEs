@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.pokemon.pokemones.core.Navigation;
 
-public class ComponenteChangeRequestEvent {
+public class ComponentChangeRequestEvent {
 
-	private final String newComponent;	
+	private final String newComponentName;	
 	private final Navigation navigation;
 	private final Map<String, Object> params;
 	
@@ -15,23 +15,23 @@ public class ComponenteChangeRequestEvent {
 //		super();
 //	}
 
-	public ComponenteChangeRequestEvent(final String newComponent, final Navigation navigation) {		
+	public ComponentChangeRequestEvent(final String newComponent, final Navigation navigation) {		
 		this(newComponent, navigation, new HashMap<String, Object>());
 	}
 	
-	public ComponenteChangeRequestEvent(final String newComponent, final Navigation navigation, final Map<String, Object> params) {
+	public ComponentChangeRequestEvent(final String newComponentName, final Navigation navigation, final Map<String, Object> params) {
 		super();
 		this.params = params;
-		this.newComponent = newComponent;
+		this.newComponentName = newComponentName;
 		this.navigation = navigation;
 	}
 	
-	public ComponenteChangeRequestEvent(String newComponent) {
+	public ComponentChangeRequestEvent(String newComponent) {
 		this(newComponent, Navigation.LINK);
 	}
 
-	public String getNewComponent() {
-		return newComponent;
+	public String getNewComponentName() {
+		return newComponentName;
 	}
 	
 	public Navigation getNavigation() {

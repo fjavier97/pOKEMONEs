@@ -13,7 +13,7 @@ import com.pokemon.pokemones.component.presenter.PokemonEditorPresenter;
 import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.component.controller.AbstractController;
 import com.pokemon.pokemones.core.component.controller.ModelController;
-import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
 import com.pokemon.pokemones.core.services.ModelManagerService;
@@ -114,7 +114,7 @@ public class PokemonEditorController extends ModelController<PokemonEditorPresen
 	}
 	
 	private @FXML void atras(){
-		final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("PokemonList", Navigation.BACKWARD);
+		final ComponentChangeRequestEvent evt = new ComponentChangeRequestEvent("PokemonList", Navigation.BACKWARD);
 		publisher.publishEvent(evt);
 	}
 

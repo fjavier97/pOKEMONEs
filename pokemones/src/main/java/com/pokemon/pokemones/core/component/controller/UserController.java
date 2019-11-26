@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.component.presenter.UserPresenter; 
-import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
 import com.pokemon.pokemones.core.item.dto.RoleDPO;
@@ -69,7 +69,7 @@ public class UserController extends ModelController<UserPresenter, UserDPO, Long
 		/* operaciones */	
 		
 		private @FXML void atras(){
-			final ComponenteChangeRequestEvent evt = new ComponenteChangeRequestEvent("Users", Navigation.BACKWARD);
+			final ComponentChangeRequestEvent evt = new ComponentChangeRequestEvent("Users", Navigation.BACKWARD);
 			publisher.publishEvent(evt);
 		}
 		

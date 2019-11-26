@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.component.presenter.LoginPresenter;
-import com.pokemon.pokemones.core.event.ComponenteChangeRequestEvent;
+import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 import com.pokemon.pokemones.core.event.LoginNotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent;
 import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
