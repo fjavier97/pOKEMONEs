@@ -22,7 +22,7 @@ public class AspectPropertyService extends AbstractPropertiesService{
 	}
 	
 	public Color getDefaultBackgroundColor(){
-		return Color.web((String)super.getProperty(KEY_DEFAULTBACKGROUNDCOLOR,"#00000000"));
+		return Color.web((String)super.getProperty(KEY_DEFAULTBACKGROUNDCOLOR,"#808080FF"));
 	}
 	
 	public void setAnimationEnabled(final String color){

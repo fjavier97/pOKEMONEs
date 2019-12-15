@@ -18,10 +18,13 @@ import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
 import com.pokemon.pokemones.core.services.LoginService;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 
 @Component("Login")
 @Scope("ComponentScope")
-public class LoginController extends AbstractController<LoginPresenter> {
+public class LoginController extends AbstractController {
 
 	private final LoginService loginService;
 	
@@ -29,21 +32,16 @@ public class LoginController extends AbstractController<LoginPresenter> {
 		this.loginService = loginService;
 	}
 	
-	protected @Override LoginPresenter initPresenter() {
-		return new LoginPresenter();
-	}
-	
 	private @FXML void login() {
  		try {	
- 			System.err.println("service = "+loginService);
- 			loginService.login(getPresenter().getUsrfield().getText(), getPresenter().getPwdfield().getText());
- 			//getPresenter().getNotifiaction().setText("");
- 	 		//clear(true,true);
- 		}catch (UsernameNotFoundException e1) {
-			getPresenter().getNotifiaction().setText("Usuario no encontrado");
+ 			loginService.login(
+ 					getPresenter().get("usrfield",TextField.class).getText(), 
+ 					getPresenter().get("pwdfield",PasswordField.class).getText());
+ 		}catch (UsernameNotFoundException e1) { 			
+			getPresenter().get("notifiaction",Text.class).setText("Usuario no encontrado");
 			clear(true,true);
 		}catch (BadCredentialsException e2) {
-			getPresenter().getNotifiaction().setText("Contraseña incorrecta");
+			getPresenter().get("notifiaction",Text.class).setText("Contraseña incorrecta");
 			clear(false,true);
 		}catch (AuthenticationException e) {
 			LOG.error("error en login", e);
@@ -52,8 +50,8 @@ public class LoginController extends AbstractController<LoginPresenter> {
  	}
  	
  	private void clear(final boolean clearusr, final boolean clearpwd) {
- 		if(clearusr) getPresenter().getUsrfield().clear();
- 		if(clearpwd) getPresenter().getPwdfield().clear();
+ 		if(clearusr) getPresenter().get("usrfield",TextField.class).clear();
+ 		if(clearpwd) getPresenter().get("pwdfield",PasswordField.class).clear();
  	}
  	
 	

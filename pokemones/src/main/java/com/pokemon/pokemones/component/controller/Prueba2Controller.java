@@ -18,7 +18,7 @@ import javafx.fxml.Initializable;
 
 @Component("Prueba2")
 @Scope("ComponentScope")
-public class Prueba2Controller extends AbstractController<Void> {
+public class Prueba2Controller extends AbstractController {
 
 	public Prueba2Controller() {
 		super();
@@ -41,12 +41,6 @@ public class Prueba2Controller extends AbstractController<Void> {
 	}
 	
 	public @Override void refreshData() {	
-	}
-
-
-	@Override
-	protected Void initPresenter() {
-		return null;
 	}
 
 }

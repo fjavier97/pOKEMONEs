@@ -6,13 +6,13 @@ public class Component {
 
 	private View view;
 	
-	private AbstractController<?> controller;
+	private AbstractController controller;
 
 	public Component() {
 		this(new View(), null);
 	}
 	
-	public Component(View view, AbstractController<?> controller) {
+	public Component(View view, AbstractController controller) {
 		super();
 		this.view = view;
 		this.controller = controller;
@@ -26,11 +26,11 @@ public class Component {
 		this.view = view;
 	}
 
-	public AbstractController<?> getController() {
+	public AbstractController getController() {
 		return controller;
 	}
 
-	public void setController(AbstractController<?> controller) {
+	public void setController(AbstractController controller) {
 		this.controller = controller;
 	}
 

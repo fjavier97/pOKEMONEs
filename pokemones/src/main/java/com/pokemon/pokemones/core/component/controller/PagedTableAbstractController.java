@@ -23,7 +23,7 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
-public abstract class PagedTableAbstractController<E, P extends PagedTablePresenter<E>> extends AbstractController<P> {
+public abstract class PagedTableAbstractController<E> extends AbstractController {
 
 	/*
 		setPageCount() es el numero total de paginas
@@ -60,13 +60,13 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 		System.out.println("ir a "+indice+",current index: "+current_index+":T="+Thread.currentThread().getId());
 		
 		//comprobar que la pagina no este fuera de rango si es conocido
-		final int max = getPresenter().getPaginator().getPageCount();
+		final int max = getPresenter().get("paginator",Pagination.class).getPageCount();
 		if(max!=Pagination.INDETERMINATE && indice>=max) {
 			/* esto no deberia salir porque el paginador muestra solo los indices con contenido pero por si acaso */
 			LOG.info("page requested out of range");
-			getPresenter().getTableview().setPlaceholder(new Text("page requested out of range"));
-			getPresenter().getTableview().getItems().clear();
-			return getPresenter().getTableview();
+			getPresenter().get("tableview",TableView.class).setPlaceholder(new Text("page requested out of range"));
+			getPresenter().get("tableview",TableView.class).getItems().clear();
+			return getPresenter().get("tableview",TableView.class);
 		}
 		/* preparamos el filtro */
 		List<Specification<E>> filtro = new LinkedList<Specification<E>>();
@@ -82,14 +82,14 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 			current_index=indice;
 		}
 		
-		if(getPresenter().getPaginator().getPageCount()!=page.getTotalPages()) {
-			getPresenter().getPaginator().setPageCount(page.getTotalPages());
+		if(getPresenter().get("paginator",Pagination.class).getPageCount()!=page.getTotalPages()) {
+			getPresenter().get("paginator",Pagination.class).setPageCount(page.getTotalPages());
 		}
 
 
 		// devolver la vista con los nuevos elementos
-		getPresenter().getTableview().getItems().setAll(items);
-		return getPresenter().getTableview();	
+		getPresenter().get("tableview",TableView.class).getItems().setAll(items);
+		return getPresenter().get("tableview",TableView.class);	
 	}
 	
 	protected abstract void bindFilters();
@@ -101,11 +101,11 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 			current_index=(Integer)args.get("index");
 			System.out.println("contiene: "+(Integer)args.get("index"));
 		}
-		System.out.println(getPresenter().getPaginator()==null);
-		getPresenter().getPaginator().setMaxPageIndicatorCount(7);
+		System.out.println(getPresenter().get("paginator",Pagination.class)==null);
+		getPresenter().get("paginator",Pagination.class).setMaxPageIndicatorCount(7);
 		
-		if(getPresenter().getPaginator().getPageFactory()==null) {
-			getPresenter().getPaginator().setPageFactory(this::navigate);
+		if(getPresenter().get("paginator",Pagination.class).getPageFactory()==null) {
+			getPresenter().get("paginator",Pagination.class).setPageFactory(this::navigate);
 		}
 		
 		bindFilters();
@@ -117,7 +117,7 @@ public abstract class PagedTableAbstractController<E, P extends PagedTablePresen
 		/* llamo a navigate porque si no al parecer suda polla de recargar la tabla si el indice ya es el mismo */
 		navigate(-1);
 		/* llamo a setcurrentindex porque si no al cambiar y volver del componente pilla el 0 */
-		getPresenter().getPaginator().setCurrentPageIndex(current_index);
+		getPresenter().get("paginator",Pagination.class).setCurrentPageIndex(current_index);
 	}
 	
 	private Specification<E> specifications(List<Specification<E>> specs){

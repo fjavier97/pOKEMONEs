@@ -17,7 +17,9 @@ import com.pokemon.pokemones.core.event.ComponentViewRefreshEvent;
 import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
 import com.pokemon.pokemones.core.event.LanguajeChangeEvent;
 import com.pokemon.pokemones.core.event.LoginNotificationEvent;
+import com.pokemon.pokemones.core.event.NotificationEvent;
 import com.pokemon.pokemones.core.event.StartEvent;
+import com.pokemon.pokemones.core.event.NotificationEvent.Threat;
 import com.pokemon.pokemones.core.scopes.ComponentScope;
 import com.pokemon.pokemones.core.services.LoginService;
 
@@ -36,7 +38,7 @@ public class ComponentManager {
 	private CoreController coreComponentController;
 	private final ComponentLoader loader;	
 	
-	private AbstractController<?> currentComponentController;
+	private AbstractController currentComponentController;
 	
 	private final ApplicationEventPublisher publisher;
 	
@@ -75,7 +77,6 @@ public class ComponentManager {
 	}
 		
 	private @EventListener void onLogin(final LoginNotificationEvent evt){
-		System.out.println(evt.isLogin()+"-"+evt.getUsr());
 		if(evt.isLogin()) {
 			coreComponentController.setLoginText(evt.getUsr());
 		}else {
@@ -97,6 +98,7 @@ public class ComponentManager {
 			Platform.exit();
 		}
 		getStage().show();
+		publisher.publishEvent(new NotificationEvent("aplicacion iniciada",Threat.INFO));
 		return new ComponentChangeRequestEvent("Login");
 	}
 	
@@ -138,7 +140,7 @@ public class ComponentManager {
 		
 			/* carga */
 			final View view = new View();
-			final AbstractController<?> newController = loader.load(evt.getNewComponentName(), view, evt.getParams());
+			final AbstractController newController = loader.load(evt.getNewComponentName(), view, evt.getParams());
 			
 			/* visualizacion */
 			currentComponentController = newController;		
@@ -170,5 +172,10 @@ public class ComponentManager {
 	private @EventListener void onComponentViewRefresh(ComponentViewRefreshEvent evt){
 		LOG.info("referscando datos");
 		currentComponentController.refreshView();
+	}
+	
+	private @EventListener void onNotificationEvent(final NotificationEvent evt) {
+		if(coreComponentController!=null)
+			coreComponentController.publishNotification(evt);		
 	}
 }

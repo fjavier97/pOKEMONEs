@@ -1,33 +1,21 @@
 package com.pokemon.pokemones.entrypoint;
 
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.CustomScopeConfigurer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 import com.pokemon.pokemones.core.event.StartEvent;
 import com.pokemon.pokemones.core.job.JobPerformable;
-import com.pokemon.pokemones.core.job.ScanJobs;
 import com.pokemon.pokemones.core.scopes.ComponentScope;
 import com.pokemon.pokemones.core.security.MethodSecurityConfig;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Menu;
 import javafx.stage.Stage;
 
 @EnableJpaRepositories(basePackages={"com.pokemon.pokemones"})
@@ -87,4 +75,8 @@ public class PokemonesApplication extends Application{
 //    	return  DataSourceBuilder.create().url(url).username(usr).password(pwd).build();
 //	}
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+	
 }

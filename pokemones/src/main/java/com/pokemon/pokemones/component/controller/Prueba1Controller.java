@@ -17,7 +17,7 @@ import javafx.fxml.FXML;
 
 @Component("Prueba1")
 @Scope("ComponentScope")
-public class Prueba1Controller extends AbstractController<Void> {
+public class Prueba1Controller extends AbstractController {
 
 	private final JobService js;
 	
@@ -39,11 +39,6 @@ public class Prueba1Controller extends AbstractController<Void> {
 	}
 	
 	public @Override void refreshData() {	
-	}
-
-	@Override
-	protected Void initPresenter() {
-		return null;
 	}
 	
 }

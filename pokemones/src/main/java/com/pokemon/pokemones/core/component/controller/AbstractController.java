@@ -13,25 +13,19 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import com.pokemon.pokemones.core.ComponentManager;
-
+import com.pokemon.pokemones.core.Presenter;
 import com.pokemon.pokemones.core.services.LocalizationService;
 
 import javafx.scene.control.Tooltip;
 
-public abstract class AbstractController<C> {	
+public abstract class AbstractController {	
 	
 	/* PRESENTADOR ****************************************************************************** */
-	private C presenter;
+	private Presenter presenter;
 	
-	public C getPresenter() {
+	public Presenter getPresenter() {
 		return presenter;
 	}
-
-	private void setPresenter(C presenter) {
-		this.presenter = presenter;
-	}
-	
-	protected abstract C initPresenter();
 
 	/* MANAGER ********************************************************************************** */
 	protected ComponentManager manager;
@@ -94,17 +88,15 @@ public abstract class AbstractController<C> {
 			if(b==null){
 			return;
 		}
-	    for (Field f : getPresenter().getClass().getDeclaredFields()) {
-	    	final boolean wasaccesible = f.isAccessible();
-	    	f.setAccessible(true);
+	    for (String n : getPresenter().getKeys()) {
 			try {				
-				final Object o = f.get(getPresenter());
+				final Object o =getPresenter().get(n,Object.class);
 				
 				if(o==null) {
 					continue;
 				}
 		
-				final String k = o.getClass().getSimpleName()+"."+f.getName();
+				final String k = o.getClass().getSimpleName()+"."+n;
 				for(Opcion opt: opciones){
 					try{	
 						final Class<?> c = opt.getContentClass();// tipo de la etiqueta que estoy pasando
@@ -115,7 +107,7 @@ public abstract class AbstractController<C> {
 					} catch(NoSuchMethodException me) {
 						continue;
 					} catch(MissingResourceException mre) {
-						LOG.error("el campo "+f.getName()+" no esta localizado");
+						LOG.error("el campo "+n+" no esta localizado");
 						continue;
 					} catch (InvocationTargetException | SecurityException | InstantiationException e) {
 						LOG.error("error inyectando valor:"+e.getMessage());
@@ -125,7 +117,6 @@ public abstract class AbstractController<C> {
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				LOG.error("error accediendo al campo:"+e.getMessage());
 			}
-			f.setAccessible(wasaccesible);
 	    }
 	}
 	
@@ -157,7 +148,7 @@ public abstract class AbstractController<C> {
 	
 	protected AbstractController() {
 		LOG = LoggerFactory.getLogger(getClass());
-		setPresenter(initPresenter());
+		this.presenter = new Presenter();
 	}
 
 	public abstract void handleParams(final Map<String, Object> args);

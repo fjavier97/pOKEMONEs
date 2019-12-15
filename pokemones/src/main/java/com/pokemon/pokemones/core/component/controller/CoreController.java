@@ -46,7 +46,7 @@ import customfx.scene.control.TreeMenu;
 
 @Component("Core")
 //@Scope("ComponentScope")
-public class CoreController extends AbstractController<Void> {
+public class CoreController extends AbstractController{
 		
 	private Object lock;
 	
@@ -231,8 +231,8 @@ public class CoreController extends AbstractController<Void> {
 		
 	}
 	
-	public @EventListener void onNotificationEvent(final NotificationEvent evt) {
-		notificationarea.getItems().add(evt);		
+	public void publishNotification(final NotificationEvent evt) {
+		notificationarea.addNotification(evt);		
 	}
 
 	/****
@@ -298,18 +298,11 @@ public class CoreController extends AbstractController<Void> {
 		tree.addEntry("/sistema/procesos", "job history", e->publisher.publishEvent(new ComponentChangeRequestEvent("JobHistory",Navigation.LINK)));
 		tree.addEntry("/sistema/procesos", "scheduled jobs", e->{});
 		tree.addEntry("/sistema", "usuarios", e->publisher.publishEvent(new ComponentChangeRequestEvent("Users",Navigation.LINK)));
-		tree.addEntry("/sistema", "roles", e->publisher.publishEvent(new ComponentChangeRequestEvent("Roles",Navigation.LINK)));
-		publisher.publishEvent(new NotificationEvent("aplicacion iniciada",Threat.INFO));
+		tree.addEntry("/sistema", "athorities", e->publisher.publishEvent(new ComponentChangeRequestEvent("Authorities",Navigation.LINK)));
 
 	}
 
 	public @Override void refreshData() {	
-	}
-
-	@Override
-	protected Void initPresenter() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

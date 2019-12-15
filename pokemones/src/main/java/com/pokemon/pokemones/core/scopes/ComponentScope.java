@@ -14,23 +14,23 @@ import com.pokemon.pokemones.core.component.controller.AbstractController;
 @Component
 public class ComponentScope implements Scope {
 
-	private final Map<String, AbstractController<?>> beans;
+	private final Map<String, AbstractController> beans;
 	private final Map<String, Runnable> destructionCallbacks;
 
 	public ComponentScope() {
 		super();
-		this.beans=new ConcurrentHashMap<>();
-		this.destructionCallbacks=new ConcurrentHashMap<>();
+		this.beans=new ConcurrentHashMap<String, AbstractController>();
+		this.destructionCallbacks=new ConcurrentHashMap<String, Runnable>();
 	}
 	
-	public @Override Object get(String name, ObjectFactory<?> objectFactory) {
+	public Object get(String name, ObjectFactory<?> objectFactory) {
 		if(!beans.containsKey(name)) {
-			beans.put(name, (AbstractController<?>)objectFactory.getObject());
+			beans.put(name, (AbstractController)objectFactory.getObject());
 		}
 		return beans.get(name);
 	}
 	
-	public @Override Object remove(String name) {
+	public Object remove(String name) {
 //		System.out.println("remove "+name);
 		if(destructionCallbacks.containsKey(name)) {
 			destructionCallbacks.remove(name).run();
@@ -51,17 +51,17 @@ public class ComponentScope implements Scope {
 		}
 	}
 		
-	public @Override void registerDestructionCallback(String name, Runnable callback) {
+	public void registerDestructionCallback(String name, Runnable callback) {
 		this.destructionCallbacks.put(name, callback);
 
 	}
 
-	public @Override Object resolveContextualObject(String key) {
+	public Object resolveContextualObject(String key) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public @Override String getConversationId() {
+	public String getConversationId() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -24,7 +24,7 @@ public class UserService implements SpecificationExecutor<UserDPO>, ModelManager
 		this.repo=repo;
 	}
 		
-	@PreAuthorize("canUse()")
+	//@PreAuthorize("canUse()")
 	public void save(final UserDPO model) {
 		System.out.println("guardado");
 		repo.save(model);

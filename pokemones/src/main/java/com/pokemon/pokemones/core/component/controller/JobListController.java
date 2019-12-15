@@ -15,7 +15,7 @@ import javafx.scene.control.TableView;
 
 @Component("JobList")
 @Scope("ComponentScope")
-public class JobListController extends AbstractController<JobListPresenter>{
+public class JobListController extends AbstractController{
 	
 	private final JobService jobService;
 	
@@ -25,16 +25,11 @@ public class JobListController extends AbstractController<JobListPresenter>{
 	
 	@Override
 	public void handleParams(Map<String, Object> args) {
-		getPresenter().getJobsView().setItems(jobService.getJobs());;		
+		getPresenter().get("jobsView",TableView.class).setItems(jobService.getJobs());;		
 	}
 	
 	public @Override void refreshData() {	
 	}
 
-	@Override
-	protected JobListPresenter initPresenter() {
-		// TODO Auto-generated method stub
-		return new JobListPresenter();
-	}
 	
 }

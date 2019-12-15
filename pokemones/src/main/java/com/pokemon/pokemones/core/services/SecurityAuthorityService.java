@@ -6,37 +6,37 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.pokemon.pokemones.core.item.dto.RoleDPO;
-import com.pokemon.pokemones.core.repository.SecurityRoleRepository;
+import com.pokemon.pokemones.core.item.dto.AuthorityDPO;
+import com.pokemon.pokemones.core.repository.SecurityAuthorityRepository;
 import com.pokemon.pokemones.core.repository.SpecificationExecutor;
 
 @Service
-public class SecurityRoleService implements SpecificationExecutor<RoleDPO>, ModelManagerService<RoleDPO,Long>{
+public class SecurityAuthorityService implements SpecificationExecutor<AuthorityDPO>, ModelManagerService<AuthorityDPO,Long>{
 
-	private final SecurityRoleRepository repo;
+	private final SecurityAuthorityRepository repo;
 	
-	public @Autowired SecurityRoleService(final SecurityRoleRepository repo) {
+	public @Autowired SecurityAuthorityService(final SecurityAuthorityRepository repo) {
 		this.repo = repo;
 	}
 	
 	@Override
-	public RoleDPO create() {
-		return new RoleDPO();
+	public AuthorityDPO create() {
+		return new AuthorityDPO();
 	}
 
 	@Override
-	public RoleDPO findById(Long key) {
+	public AuthorityDPO findById(Long key) {
 		// TODO Auto-generated method stub
 		return repo.findById(key).get();
 	}
 
 	@Override
-	public void save(final RoleDPO object) {
+	public void save(final AuthorityDPO object) {
 		repo.save(object);
 	}
 
 	@Override
-	public Page<RoleDPO> findAll(Specification<RoleDPO> spec, Pageable pageable) {
+	public Page<AuthorityDPO> findAll(Specification<AuthorityDPO> spec, Pageable pageable) {
 		// TODO Auto-generated method stub
 		return repo.findAll(spec, pageable);
 	}

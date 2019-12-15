@@ -43,7 +43,10 @@ public class LoginService {
 		SecurityContextHolder.getContext().setAuthentication(authorizedToken);
 		/* publicamos evento para cambiar usuario en UI */
 		publisher.publishEvent(new LoginNotificationEvent(true,usr));
-		/* publicamos evento para cambiar usuario en UI */
+		/* publicamos evento notificar el login */
+		for(int i = 1; i<13; i++) {
+			publisher.publishEvent(new NotificationEvent("login successful"+i,Threat.SUCCESS));
+		}
 		publisher.publishEvent(new NotificationEvent("login successful",Threat.SUCCESS));
 		/* cambiamos el componente al componente inicial */
 		publisher.publishEvent(new ComponentChangeRequestEvent("Prueba1", Navigation.LINK));

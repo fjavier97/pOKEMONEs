@@ -9,35 +9,36 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.pokemon.pokemones.core.component.presenter.RolesPresenter;
-import com.pokemon.pokemones.core.item.dto.RoleDPO;
-import com.pokemon.pokemones.core.repository.SecurityRoleRepository;
+import com.pokemon.pokemones.core.item.dto.AuthorityDPO;
+import com.pokemon.pokemones.core.item.dto.AuthorityDPO;
+import com.pokemon.pokemones.core.repository.SecurityAuthorityRepository;
 import com.pokemon.pokemones.core.repository.SpecificationExecutor;
 
 @Service
-public class RoleService implements SpecificationExecutor<RoleDPO>{
+public class AuthoriyService implements SpecificationExecutor<AuthorityDPO>{
 
-	private final SecurityRoleRepository repo;
+	private final SecurityAuthorityRepository repo;
 	
-	public @Autowired RoleService(final SecurityRoleRepository repo) {
+	public @Autowired AuthoriyService(final SecurityAuthorityRepository repo) {
 		this.repo = repo;
 	}
 	
 	@Override
-	public Page<RoleDPO> findAll(Specification<RoleDPO> spec, Pageable pageable) {
+	public Page<AuthorityDPO> findAll(Specification<AuthorityDPO> spec, Pageable pageable) {
 		return repo.findAll(spec, pageable);
 	}
 
-	public void delete(final List<RoleDPO> items) {
+	public void delete(final List<AuthorityDPO> items) {
 		repo.deleteAll(items);
 	}
 	
-	public RoleDPO create() {
+	public AuthorityDPO create() {
 		//TODO dialogo para obtener String
-		final RoleDPO item = new RoleDPO("");
+		final AuthorityDPO item = new AuthorityDPO();
 		return save(item);
 	}
 	
-	public RoleDPO save(final RoleDPO item) {		
+	public AuthorityDPO save(final AuthorityDPO item) {		
 		return repo.save(item);
 	}
 	

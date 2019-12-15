@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.pokemon.pokemones.core.locals.Lacalized;
 import com.pokemon.pokemones.core.repository.SpecificationExecutor;
 import com.pokemon.pokemones.core.services.DialogService;
 
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import com.pokemon.pokemones.component.presenter.PokemonListPresenter;
 import com.pokemon.pokemones.core.Navigation;
 import com.pokemon.pokemones.core.component.controller.PagedTableAbstractController;
 import com.pokemon.pokemones.core.event.ComponentChangeRequestEvent;
@@ -32,15 +30,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
 @Component("PokemonList")
 @Scope("ComponentScope")
-public class PokemonListController extends PagedTableAbstractController<PokemonDTO,PokemonListPresenter>{	
+public class PokemonListController extends PagedTableAbstractController<PokemonDTO>{	
 		
 	private final DialogService dialogService;
 	
@@ -64,7 +59,7 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 	
 	private @FXML void modificar() {
 		
-		final PokemonDTO selectedItem = getPresenter().getTableview().getSelectionModel().getSelectedItem();
+		final PokemonDTO selectedItem = (PokemonDTO) getPresenter().get("tableview",TableView.class).getSelectionModel().getSelectedItem();
 		
 		if(selectedItem == null) {
 			return;
@@ -83,7 +78,7 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 	
 	private @FXML void eliminar() {
 		
-		final PokemonDTO selectedItem = getPresenter().getTableview().getSelectionModel().getSelectedItem();
+		final PokemonDTO selectedItem = (PokemonDTO) getPresenter().get("tableview",TableView.class).getSelectionModel().getSelectedItem();
 		
 		if(selectedItem == null) {
 			return;
@@ -110,7 +105,7 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 	
 	private @FXML void ver() {
 		
-		final PokemonDTO selectedItem = getPresenter().getTableview().getSelectionModel().getSelectedItem();
+		final PokemonDTO selectedItem = (PokemonDTO) getPresenter().get("tableview",TableView.class).getSelectionModel().getSelectedItem();
 		
 		if(selectedItem == null) {
 			return;
@@ -140,13 +135,8 @@ public class PokemonListController extends PagedTableAbstractController<PokemonD
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected void bindFilters() {
-		Bindings.bindBidirectional(getPresenter().getFiltro_nombre().textProperty(),(Property)filterProperties.get("filtro.nombre"));	
-		Bindings.bindBidirectional(getPresenter().getFiltro_forma().textProperty(),(Property)filterProperties.get("filtro.forma"));
-	}
-
-	@Override
-	protected PokemonListPresenter initPresenter() {
-		return new PokemonListPresenter();
+		Bindings.bindBidirectional(getPresenter().get("filtro_nombre",TextField.class).textProperty(),(Property)filterProperties.get("filtro.nombre"));	
+		Bindings.bindBidirectional(getPresenter().get("filtro_forma",TextField.class).textProperty(),(Property)filterProperties.get("filtro.forma"));
 	}
 	
 	public @FXML @Override void refreshData() {	

@@ -17,7 +17,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 
-public abstract class ModelController<C, M extends ItemDPO<K>, K> extends AbstractController<C>{
+public abstract class ModelController<M extends ItemDPO<K>, K> extends AbstractController{
 
 	protected abstract ModelManagerService<M,K> getService();
 	

@@ -15,7 +15,7 @@ import com.pokemon.pokemones.core.repository.SpecificationExecutor;
 
 @Component("JobHistory")
 @Scope("ComponentScope")
-public class JobHistoryController extends PagedTableAbstractController<JobDTO,PagedTablePresenter<JobDTO>>{
+public class JobHistoryController extends PagedTableAbstractController<JobDTO>{
 
 	private final JobRepository jobRepository;
 
@@ -23,10 +23,6 @@ public class JobHistoryController extends PagedTableAbstractController<JobDTO,Pa
 		super();
 		this.jobRepository = jobRepository;
 	}
-//	
-//	protected @Override Page<JobDTO> getPage(final int i){
-//		return jobRepository.findAll(PageRequest.of(i, elements_per_page, Sort.by("name"))); 
-//	}
 
 	@Override
 	protected SpecificationExecutor<JobDTO> getRepo() {
@@ -39,11 +35,9 @@ public class JobHistoryController extends PagedTableAbstractController<JobDTO,Pa
 	}
 
 	@Override
-	protected PagedTablePresenter<JobDTO> initPresenter() {
+	protected void bindFilters() {
 		// TODO Auto-generated method stub
-		return new PagedTablePresenter<JobDTO>();
-	}	
-
-
+		
+	}
 	
 }

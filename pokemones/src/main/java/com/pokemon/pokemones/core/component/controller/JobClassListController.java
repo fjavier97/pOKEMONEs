@@ -14,7 +14,7 @@ import javafx.scene.control.ListView;
 
 @Component("JobClassList")
 @Scope("ComponentScope")
-public class JobClassListController extends AbstractController<JobClassListPresenter>{
+public class JobClassListController extends AbstractController{
 
 	private final JobService jobservice;	
 	
@@ -28,13 +28,7 @@ public class JobClassListController extends AbstractController<JobClassListPrese
 	}
 	
 	public @Override void refreshData() {
-		getPresenter().getJobView().setItems(jobservice.getAvailableJobs());	
-	}
-
-	@Override
-	protected JobClassListPresenter initPresenter() {
-		// TODO Auto-generated method stub
-		return new JobClassListPresenter();
+		getPresenter().get("jobView",ListView.class).setItems(jobservice.getAvailableJobs());	
 	}
 	
 }

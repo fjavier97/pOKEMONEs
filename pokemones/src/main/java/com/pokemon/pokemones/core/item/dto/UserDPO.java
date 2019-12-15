@@ -1,7 +1,9 @@
 package com.pokemon.pokemones.core.item.dto;
 
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -23,128 +26,162 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-@Entity @Table(name="User")
-public class UserDPO implements UserDetails, ItemDPO<Long> {
+//////////////////////////////////////
+
+@Entity
+@Table(name="USER")
+public class UserDPO implements UserDetails, ItemDPO<Long>{
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -5785296724231322660L;
 	
-	private ObservableList<RoleDPO> authorities;
-	private StringProperty usernameProperty;
-	private StringProperty passwordProperty;
-	private BooleanProperty enabledProperty;
-	private LongProperty idProperty;
 	
-	public UserDPO() {
-		this.usernameProperty = new SimpleStringProperty(this,"username");
-		this.passwordProperty = new SimpleStringProperty(this,"password");
-		this.enabledProperty = new SimpleBooleanProperty(this,"enabled");
-		this.idProperty = new SimpleLongProperty(this,"id");
-		this.authorities = FXCollections.observableArrayList();
+	public @Override Long getPK(){
+		return id;
 	}
 	
-	public UserDPO(final String username, final String password) {
-		this();
-		setUsername(username);
-		setPassword(password);
+	public UserDPO(){//valores por defecto
+		this.authorities=new LinkedList<AuthorityDPO>();
+		this.enabled=false;
 	}
 	
+	/* ID ----------------------------------------------------------  */
+	@Column
+	@Id
+	@GeneratedValue
+	private long id;
+	public long getId(){
+		return id;
+	}
+	@Transient private LongProperty _id = null;
+	public LongProperty idProperty(){
+		if(_id == null){
+			_id = new SimpleLongProperty(this,"id",id);
+			_id.addListener((obs,nv,ov)->id=nv.longValue());
+		}
+		return _id;
+	}
 	
-	@Transient
-	public ObservableList<RoleDPO> getAuthoritiesFx(){
+	/* USERNAME -----------------------------------------------------  */
+	@Column(nullable=false, unique=true)
+	private String username;
+	public @Override String getUsername(){
+		return username;
+	}
+	public void setUsername(final String un){
+		if(this._username==null){
+			username=un;
+		}else{
+			this._username.set(un);
+		}
+	}
+	@Transient private StringProperty _username;
+	public StringProperty usernameProperty(){
+		if(_username == null){
+			_username= new SimpleStringProperty(this,"username",username);
+			_username.addListener((obs,nv,ov)->username=nv);
+		}
+		return _username;
+	}
+	
+	/* PASSWORD -----------------------------------------------------  */
+	@Column(nullable=false, unique=true)
+	private String password;
+	public String getPassword(){
+		return password;
+	}
+	public void setPassword(final String pw){
+		if(this._password==null){
+			password=pw;
+		}else{
+			this._password.set(pw);
+		}
+	}
+	@Transient private StringProperty _password;
+	public StringProperty passwordProperty(){
+		if(_password == null){
+			_password= new SimpleStringProperty(this,"password",password);
+			_password.addListener((obs,nv,ov)->password=nv);
+		}
+		return _password;
+	}
+	
+	/* ENABLED -----------------------------------------------------  */
+	@Column(nullable=false)
+	private Boolean enabled;
+	public boolean isEnabled(){
+		return enabled;
+	}
+	public void setEnabled(final Boolean e){
+		if(this._enabled==null){
+			enabled=e;
+		}else{
+			this._enabled.set(e);
+		}
+	}
+	@Transient private BooleanProperty _enabled;
+	public BooleanProperty enabledProperty(){
+		if(_enabled == null){
+			_enabled= new SimpleBooleanProperty(this,"enabled",enabled);
+			_enabled.addListener((obs,nv,ov)->enabled=nv);
+		}
+		return _enabled;
+	}
+	
+	/* AUTHORITIES --------------------------------------------------  */
+	@ManyToMany(cascade={CascadeType.PERSIST,CascadeType.REFRESH})
+	@JoinTable
+	private List<AuthorityDPO> authorities;
+	public List<AuthorityDPO> getAuthorities(){
 		return authorities;
 	}
-	
-	@ManyToMany 
-	@JoinTable(name="user_role",joinColumns=@JoinColumn(name="user_id"),inverseJoinColumns=@JoinColumn(name="role_id")) 
+	public void setAuthorities(final List<AuthorityDPO> as){
+		if(this._authorities==null){
+			authorities=as;
+		}else{
+			this._authorities.setAll(as);
+		}
+	}
+	public void addAuthority(final AuthorityDPO a){
+		if(this._authorities==null){
+			authorities.add(a);
+		}else{
+			this._authorities.add(a);
+		}
+	}
+	public void removeAuthority(final AuthorityDPO a){
+		if(this._authorities==null){
+			authorities.remove(a);
+		}else{
+			this._authorities.remove(a);
+		}
+	}
+	@Transient private ObservableList<AuthorityDPO> _authorities;
+	public ObservableList<AuthorityDPO> authoritiesProperty(){
+		if(_authorities == null){
+			_authorities=FXCollections.observableArrayList(); 
+			Bindings.bindContent(authorities,_authorities);
+		}
+		return _authorities;
+	}
+
 	@Override
-	public List<RoleDPO> getAuthorities(){
-		return authorities;
-	}
-	
-	public void setAuthorities(ObservableList<RoleDPO> authorities) {
-		this.authorities = authorities;
-	}
-	
-	public void setAuthorities(List<RoleDPO> authorities) {
-		this.authorities.setAll(authorities);
-	}
-	
-
-	public final StringProperty usernameProperty() {
-		return this.usernameProperty;
-	}
-	
-	@Column(nullable=false, unique=true) @Override
-	public final String getUsername() {
-		return this.usernameProperty().get();
-	}
-	
-
-	public final void setUsername(final String username) {
-		this.usernameProperty().set(username);
-	}
-	
-
-	public final StringProperty passwordProperty() {
-		return this.passwordProperty;
-	}
-	
-	@Column(nullable=false) @Override
-	public final String getPassword() {
-		return this.passwordProperty().get();
-	}
-	
-
-	public final void setPassword(final String password) {
-		this.passwordProperty().set(password);
-	}
-	
-
-	public final BooleanProperty enabledProperty() {
-		return this.enabledProperty;
-	}
-	
-	@Column @Override
-	public final boolean isEnabled() {
-		return this.enabledProperty().get();
-	}
-	
-
-	public final void setEnabled(final boolean enabled) {
-		this.enabledProperty().set(enabled);
-	}
-
-	
-	public @Transient @Override boolean isAccountNonExpired(){
-		return true;
-	}
-	public @Transient @Override boolean isAccountNonLocked(){
-		return true;
-	}
-	public @Transient @Override boolean isCredentialsNonExpired(){
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
 		return true;
 	}
 
-	@Override @Transient
-	public Long getPK() {
-		return getId();
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
-	public final LongProperty idProperty() {
-		return this.idProperty;
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
 	}
-	
-	@Id @Column @GeneratedValue(strategy=GenerationType.AUTO)
-	public final long getId() {
-		return this.idProperty().get();
-	}
-	
-	
-	public final void setId(final long id) {
-		this.idProperty().set(id);
-	}
-	
 }

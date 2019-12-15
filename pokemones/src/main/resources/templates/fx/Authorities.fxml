@@ -14,7 +14,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.Pane?>
 
-<fx:root type="com.pokemon.pokemones.core.View" fx:controller="com.pokemon.pokemones.core.component.controller.RolesController"
+<fx:root type="com.pokemon.pokemones.core.View" fx:controller="com.pokemon.pokemones.core.component.controller.AuthoritiesController"
 	xmlns="https://javafx.com/javafx/8"
 	xmlns:fx="https://javafx.com/fxml">
 	<menus>
