@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+
+<!-- fx:controller="com.pokemon.pokemones.core.NotificationNode" -->
+<fx:root xmlns="https://javafx.com/javafx/8" xmlns:fx="https://javafx.com/fxml" prefWidth="300" prefHeight="50"
+	type="javafx.scene.layout.GridPane" fx:controller="com.pokemon.pokemones.customcomfx.AbstractNotificationCellController" 
+	style="-fx-background-color:gray;">	
+	<columnConstraints>		
+		<ColumnConstraints hgrow="ALWAYS"/>
+		<ColumnConstraints prefWidth="35"/>
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints vgrow="ALWAYS"/>
+	</rowConstraints>
+	<children>
+		<Pane fx:id="colorPane"				 									GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+		
+		<HBox				 													GridPane.columnIndex="0" GridPane.rowIndex="0">
+			<Button fx:id="closeButton" text="X" />
+			<StackPane HBox.hgrow="SOMETIMES">
+				<Label fx:id="texto" textAlignment="CENTER"/>
+			</StackPane>
+		</HBox>
+	</children>
+			
+</fx:root>
